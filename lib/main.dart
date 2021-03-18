@@ -21,21 +21,43 @@ class MyTodoApp extends StatelessWidget {
   }
 }
 
+class TodoListPage extends StatefulWidget {
+  @override
+  _TodoListPageState createState() => _TodoListPageState();
+}
+
 // リスト一覧画面用Widget
-class TodoListPage extends StatelessWidget {
+class _TodoListPageState extends State<TodoListPage> {
+  List<String> todoList = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('リスト一覧画面'),
+      appBar: AppBar(
+        title: Text('リスト一覧'),
+      ),
+      body: ListView.builder(
+        itemCount: todoList.length,
+        itemBuilder: (context, index) {
+          return Card(
+            child: ListTile(
+              title: Text(todoList[index]),
+            ),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          final newListText = await Navigator.of(context).push(
             MaterialPageRoute(builder: (content) {
-              return TodoAppPage();
+              return TodoAddPage();
             }),
           );
+          if (newListText != null) {
+            setState(() {
+              todoList.add(newListText);
+            });
+          }
         },
         child: Icon(Icons.add),
       ),
@@ -43,16 +65,64 @@ class TodoListPage extends StatelessWidget {
   }
 }
 
-class TodoAppPage extends StatelessWidget {
+class TodoAddPage extends StatefulWidget {
+  @override
+  _TodoAddPageState createState() {
+    return _TodoAddPageState();
+  }
+  //_TodoAddPageState createState() => _TodoAddPageState();
+}
+
+class _TodoAddPageState extends State<TodoAddPage> {
+  String _text = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text('リスト追加画面(クリックで戻る)'),
+      appBar: AppBar(
+        title: Text('リスト追加'),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(64),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(_text, style: TextStyle(color: Colors.blue)),
+            const SizedBox(height: 8),
+            TextField(
+              // 入力されたテキストの値を受け取る（valueが入力されたテキスト）
+              onChanged: (String value) {
+                // データが変更したことを知らせる（画面を更新する）
+                setState(() {
+                  // データを変更
+                  _text = value;
+                });
+              },
+            ),
+            Container(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(_text);
+                },
+                child: Text('リスト追加', style: TextStyle(color: Colors.white)),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('キャンセル'),
+              ),
+            )
+          ],
         ),
       ),
     );
