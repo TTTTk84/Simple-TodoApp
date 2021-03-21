@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:todo_app/widgets/list/todolist.dart';
-import 'package:todo_app/widgets/tabbar/all_task.dart';
-import 'package:todo_app/widgets/tabbar/comp_task.dart';
-import 'package:todo_app/widgets/tabbar/incomp_task.dart';
+import 'package:todo_app/widgets/add_new_task.dart';
 import 'package:todo_app/main.dart';
 
 class HomePage extends StatefulWidget {
@@ -53,10 +51,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          // showModalBottomSheet(
-          //   context: context,
-          //   builder: (_) => AddNewTodo(),
-          // );
+          showModalBottomSheet(
+            context: context,
+            builder: (_) => SingleChildScrollView(
+              child: AddNewTask(),
+            ),
+          );
         },
       ),
     );
