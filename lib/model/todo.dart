@@ -9,7 +9,16 @@ class Todo {
 }
 
 class TodoProvider with ChangeNotifier {
-  List<Todo> _toDoList = [];
+  List<Todo> _toDoList = [
+    Todo(
+      id: 'task#1',
+      description: 'task1',
+    ),
+    Todo(
+      id: 'task#2',
+      description: 'task2',
+    ),
+  ];
 
   List<Todo> get itemsList {
     return _toDoList;

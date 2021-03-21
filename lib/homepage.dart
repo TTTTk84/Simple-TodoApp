@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/widgets/tabbar/all_task.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,13 +12,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   List<Widget> _tabs = const <Widget>[
     Tab(
-      icon: Icon(Icons.cloud_outlined),
+      icon: Text("全て"),
     ),
     Tab(
-      icon: Icon(Icons.cloud_outlined),
+      icon: Text("未達成"),
     ),
     Tab(
-      icon: Icon(Icons.cloud_outlined),
+      icon: Text("達成済"),
     )
   ];
 
@@ -39,10 +40,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const <Widget>[
-          Center(
-            child: Text('It\'s cloudy here'),
-          ),
+        children: <Widget>[
+          AllTask(),
           Center(
             child: Text('It\'s rainy here'),
           ),
@@ -50,6 +49,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: Text('It\'s sunny here'),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          // showModalBottomSheet(
+          //   context: context,
+          //   builder: (_) => AddNewTodo(),
+          // );
+        },
       ),
     );
   }

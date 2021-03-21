@@ -4,7 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/homepage.dart';
 import 'package:todo_app/model/todo.dart';
 
-void main() => runApp(TodoListApp());
+final TODO_ALL = 0;
+final TODO_INCOMP = 1;
+final TODO_COMP = 2;
+
+void main() {
+  return runApp(TodoListApp());
+}
 
 class TodoListApp extends StatelessWidget {
   @override
