@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/widgets/list/todolist.dart';
 import 'package:todo_app/widgets/tabbar/all_task.dart';
 import 'package:todo_app/widgets/tabbar/comp_task.dart';
 import 'package:todo_app/widgets/tabbar/incomp_task.dart';
+import 'package:todo_app/main.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -43,9 +45,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          AllTask(),
-          InCompTask(),
-          CompTask(),
+          TodoList(TODO_ALL),
+          TodoList(TODO_INCOMP),
+          TodoList(TODO_COMP),
         ],
       ),
       floatingActionButton: FloatingActionButton(

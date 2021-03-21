@@ -18,7 +18,6 @@ class _TodoListState extends State<TodoList> {
   @override
   Widget build(BuildContext context) {
     List<Todo> _getTodo() {
-      // print('hello ${widget._status}');
       List<Todo> todolists = Provider.of<TodoProvider>(context).itemsList;
 
       if (widget._status == TODO_COMP) {
@@ -30,7 +29,6 @@ class _TodoListState extends State<TodoList> {
     }
 
     List<Todo> todolists = _getTodo();
-    // print(todolists);
 
     return ListView.builder(
       itemCount: todolists.length,
