@@ -5,25 +5,32 @@ import 'package:todo_app/main.dart';
 import 'package:todo_app/model/todo.dart';
 import 'package:todo_app/widgets/list/list_item.dart';
 
-class TodoList extends StatelessWidget {
+class TodoList extends StatefulWidget {
   int _status;
 
   TodoList(this._status);
 
-  List<Todo> _getList(context) {
-    final todolists = Provider.of<TodoProvider>(context).itemsList;
-    if (_status == TODO_COMP) {
-      todolists.where((e) => e.isCheckd == true);
-    } else if (_status == TODO_INCOMP) {
-      todolists.where((e) => e.isCheckd == false);
-    }
+  @override
+  _TodoListState createState() => _TodoListState();
+}
 
-    return todolists;
-  }
-
+class _TodoListState extends State<TodoList> {
   @override
   Widget build(BuildContext context) {
-    List<Todo> todolists = _getList(context);
+    List<Todo> _getTodo() {
+      // print('hello ${widget._status}');
+      List<Todo> todolists = Provider.of<TodoProvider>(context).itemsList;
+
+      if (widget._status == TODO_COMP) {
+        todolists = todolists.where((e) => e.isCheckd == true).toList();
+      } else if (widget._status == TODO_INCOMP) {
+        todolists = todolists.where((e) => e.isCheckd == false).toList();
+      }
+      return todolists;
+    }
+
+    List<Todo> todolists = _getTodo();
+    // print(todolists);
 
     return ListView.builder(
       itemCount: todolists.length,

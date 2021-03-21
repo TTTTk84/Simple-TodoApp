@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/widgets/tabbar/all_task.dart';
+import 'package:todo_app/widgets/tabbar/comp_task.dart';
+import 'package:todo_app/widgets/tabbar/incomp_task.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -42,12 +44,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         controller: _tabController,
         children: <Widget>[
           AllTask(),
-          Center(
-            child: Text('It\'s rainy here'),
-          ),
-          Center(
-            child: Text('It\'s sunny here'),
-          ),
+          InCompTask(),
+          CompTask(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
