@@ -20,6 +20,10 @@ class TodoListApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Todo",
+        theme: ThemeData(
+          accentColor: Colors.orange,
+          primaryColor: const Color(0xFFDE4435),
+        ),
         home: HomePage(),
       ),
     );
