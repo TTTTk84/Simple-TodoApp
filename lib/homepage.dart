@@ -49,7 +49,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
         onPressed: () {
           showModalBottomSheet(
             context: context,

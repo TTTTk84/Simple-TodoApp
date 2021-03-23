@@ -26,18 +26,37 @@ class _ListItemState extends State<ListItem> {
       onTap: () {
         _checkItem();
       },
-      child: Card(
-        child: Row(
-          children: [
-            Checkbox(
-              value: widget.todo.isCheckd,
-              onChanged: (_) => _checkItem(),
-            ),
-            Text(
-              widget.todo.description,
-              textAlign: TextAlign.center,
-            ),
-          ],
+      child: Dismissible(
+        key: ObjectKey(widget.todo),
+        onDismissed: (DismissDirection direction) {
+          Provider.of<TodoProvider>(context, listen: false)
+              .removeTodo(widget.todo.id);
+        },
+        background: Container(
+          color: Colors.red,
+          child: ListTile(
+            leading: Icon(Icons.delete, color: Colors.white),
+          ),
+        ),
+        secondaryBackground: Container(
+          color: Colors.green,
+          child: ListTile(
+            trailing: Icon(Icons.check, color: Colors.white),
+          ),
+        ),
+        child: Card(
+          child: Row(
+            children: [
+              Checkbox(
+                value: widget.todo.isCheckd,
+                onChanged: (_) => _checkItem(),
+              ),
+              Text(
+                widget.todo.description,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -38,4 +38,9 @@ class TodoProvider with ChangeNotifier {
     int index = _toDoList.indexWhere((todo) => todo.id == id);
     _toDoList[index].isCheckd = !_toDoList[index].isCheckd;
   }
+
+  void removeTodo(String id) {
+    int index = _toDoList.indexWhere((todo) => todo.id == id);
+    _toDoList.removeAt(index);
+  }
 }
