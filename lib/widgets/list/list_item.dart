@@ -44,19 +44,39 @@ class _ListItemState extends State<ListItem> {
             trailing: Icon(Icons.check, color: Colors.white),
           ),
         ),
-        child: Card(
-          child: Row(
-            children: [
-              Checkbox(
-                value: widget.todo.isCheckd,
-                onChanged: (_) => _checkItem(),
+        child: Column(
+          children: <Widget>[
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 12.0),
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(
+                    width: 4.0,
+                    color: Colors.orange,
+                  ),
+                ),
               ),
-              Text(
-                widget.todo.description,
-                textAlign: TextAlign.center,
+              child: Row(children: [
+                Checkbox(
+                  value: widget.todo.isCheckd,
+                  onChanged: (_) => _checkItem(),
+                ),
+                Text(
+                  widget.todo.description,
+                  textAlign: TextAlign.center,
+                ),
+              ]),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(
+                  width: 0.5,
+                  color: Colors.grey,
+                )),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
