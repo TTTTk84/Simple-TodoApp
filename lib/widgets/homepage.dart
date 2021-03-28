@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/todofilter.dart';
 import 'package:todo_app/viewmodel/filters_notifier.dart';
+import 'package:todo_app/widgets/add_filter_dialog.dart';
 import 'package:todo_app/widgets/todolist.dart';
+
+import '../models/todofilter.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -24,10 +27,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return _todoWidgets;
   }
 
-  List<Tab> getTabs(int count) {
+  List<Tab> getTabs(List<TodoFilter> filters) {
     _tabs.clear();
-    for (int i = 0; i < count; i++) {
-      _tabs.add(Tab(text: "$i"));
+    for (TodoFilter f in filters) {
+      _tabs.add(Tab(text: "${f.title}"));
     }
     return _tabs;
   }
@@ -36,15 +39,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return TabController(length: _tabs.length, vsync: this);
   }
 
-  void _addAnotherTab() {
-    _tabs = getTabs(_tabs.length + 1);
+  void _addAnotherTab(List<TodoFilter> filters) {
+    _tabs = getTabs(filters);
     _tabController.index = 0;
     _tabController = getTabController();
     _updatePage();
   }
 
-  void _removeTab() {
-    _tabs = getTabs(_tabs.length - 1);
+  void _removeTab(List<TodoFilter> filters) {
+    _tabs = getTabs(filters);
     _tabController.index = 0;
     _tabController = getTabController();
     _updatePage();
@@ -56,7 +59,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _tabs = getTabs(_limitCount);
+    _tabs = getTabs(Provider.of<FiltersNotifier>(context, listen: false).itemsFilter);
     _tabController = TabController(length: _tabs.length, vsync: this);
     super.initState();
   }
@@ -69,7 +72,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // var filters = Provider.of<FiltersNotifier>(context);
+    var filters = Provider.of<FiltersNotifier>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -77,11 +80,26 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: _addAnotherTab,
+            onPressed: () async {
+              String result = await showDialog(
+                context: context, 
+                builder: (BuildContext context){
+                  return AddFilterDialog();
+                },
+              );
+              filters.createNewFilter(
+                TodoFilter(
+                  id: DateTime.now().toString(),
+                  title: result,
+                ),
+              );
+              var f = filters.itemsFilter.last;
+              print("test: ${f.title}");
+            },
           ),
           IconButton(
             icon: Icon(Icons.remove),
-            onPressed: _removeTab,
+            onPressed: () => _removeTab(filters.itemsFilter),
           ),
         ],
         bottom: TabBar(
