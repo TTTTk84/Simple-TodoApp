@@ -6,9 +6,5 @@ class Todo {
   String description;
   List<Task> tasks;
 
-  Todo({
-    this.uuid,
-    this.description,
-    this.tasks,
-  });
+  Todo(this.uuid, this.description, this.tasks);
 }

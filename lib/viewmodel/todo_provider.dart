@@ -5,18 +5,18 @@ import 'package:flutter/cupertino.dart';
 class TodoProvider with ChangeNotifier {
   List<Todo> _toDoList = [
     Todo(
-      uuid: 'todo#1',
-      description: '筋トレ',
-      tasks: [
+      'todo#1',
+      '筋トレ',
+      [
         Task(uuid: "task#1", task: "腹筋"),
         Task(uuid: "task#2", task: "背筋"),
         Task(uuid: "task#3", task: "スクワット"),
       ],
     ),
     Todo(
-      uuid: 'todo#2',
-      description: '勉強',
-      tasks: [
+      'todo#2',
+      '勉強',
+      [
         Task(uuid: "task#1", task: "国語"),
         Task(uuid: "task#2", task: "数学"),
       ],
@@ -27,10 +27,11 @@ class TodoProvider with ChangeNotifier {
     return _toDoList;
   }
 
-  void createNewTodo(Todo todo) {
+  void createNewTodo(String description) {
     final newtodo = Todo(
-      uuid: DateTime.now().toString(),
-      description: todo.description,
+      DateTime.now().toString(),
+      description,
+      [],
     );
     _toDoList.add(newtodo);
     print('_toDoList: ${_toDoList}');
