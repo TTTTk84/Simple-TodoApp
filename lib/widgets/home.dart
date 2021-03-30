@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 Padding(
                   padding: EdgeInsets.only(left: 50.0),
                   child: Text(
-                    '完了済み?件',
+                    '完了済み${todo_provider.clearTodo()}件',
                     style: TextStyle(
                       fontSize: 25.0,
                       color: Colors.white,
