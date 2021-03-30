@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/viewmodel/todo_provider.dart';
 
 class AddNewTodo extends StatefulWidget {
+  final AddDialogStatus status;
+
+  List<String> get descriptionList {
+    switch (this.status) {
+      case AddDialogStatus.add_task:
+        return ['タスクを追加', '腹筋'];
+        break;
+      case AddDialogStatus.add_todo:
+        return ['カテゴリーを追加', '筋トレ'];
+        break;
+    }
+  }
+
+  AddNewTodo(this.status);
   @override
   _AddNewTodo createState() => _AddNewTodo();
 }
@@ -11,6 +26,7 @@ class _AddNewTodo extends State<AddNewTodo> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> description = widget.descriptionList;
     MaterialLocalizations localizations = MaterialLocalizations.of(context);
     final List<Widget> actions = [
       TextButton(
@@ -26,11 +42,11 @@ class _AddNewTodo extends State<AddNewTodo> {
     ];
 
     final AlertDialog dialog = AlertDialog(
-      title: Text("カテゴリーを追加"),
+      title: Text("${description[0]}"),
       content: TextField(
         controller: dataTextController,
         decoration: InputDecoration(
-          hintText: "筋トレ",
+          hintText: "${description[1]}",
         ),
         autofocus: false,
         keyboardType: TextInputType.text,

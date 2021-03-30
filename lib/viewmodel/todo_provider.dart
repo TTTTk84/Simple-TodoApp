@@ -2,6 +2,8 @@ import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:flutter/cupertino.dart';
 
+enum AddDialogStatus { add_todo, add_task }
+
 class TodoProvider with ChangeNotifier {
   List<Todo> _toDoList = [
     Todo(
@@ -54,6 +56,14 @@ class TodoProvider with ChangeNotifier {
         Task(task: task_description, uuid: DateTime.now().toString());
     int index = searchTodoIndex(todo);
     _toDoList[index].tasks.add(newtask);
+    notifyListeners();
+  }
+
+  void deleteTask(Todo todo, Task task) {
+    int todo_index = searchTodoIndex(todo);
+    int task_index =
+        _toDoList[todo_index].tasks.indexWhere((t) => t.uuid == task.uuid);
+    _toDoList[todo_index].tasks.removeAt(task_index);
     notifyListeners();
   }
 

@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 String result = await showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return AddNewTodo();
+                    return AddNewTodo(AddDialogStatus.add_todo);
                   },
                 );
                 todo_provider.createNewTodo(result);
