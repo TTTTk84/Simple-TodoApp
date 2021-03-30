@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:todo_app/models/task.dart';
 
-class Todo {
+class Todo with ChangeNotifier {
   final String uuid;
   String description;
   List<Task> tasks;
