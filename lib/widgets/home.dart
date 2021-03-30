@@ -36,7 +36,33 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ],
         ),
-        body: TodoBuilder(todo_provider.itemsList),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Spacer(),
+            Padding(
+              padding: EdgeInsets.only(left: 50.0),
+              child: Text(
+                '合計?件',
+                style: TextStyle(fontSize: 25.0),
+              ),
+            ),
+            Spacer(flex: 2),
+            Padding(
+              padding: EdgeInsets.only(left: 50.0),
+              child: Text(
+                '完了済み?件',
+                style: TextStyle(fontSize: 25.0),
+              ),
+            ),
+            Spacer(flex: 2),
+            Flexible(
+              flex: 10,
+              child: TodoBuilder(todo_provider.itemsList),
+            ),
+            Spacer(flex: 2),
+          ],
+        ),
       ),
     );
   }

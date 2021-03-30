@@ -34,7 +34,6 @@ class TodoProvider with ChangeNotifier {
       [],
     );
     _toDoList.add(newtodo);
-    print('_toDoList: ${_toDoList}');
     notifyListeners();
   }
 

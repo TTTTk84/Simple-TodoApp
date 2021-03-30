@@ -29,26 +29,11 @@ class _TodoBuilderState extends State<TodoBuilder>
               //   ),
               // );
             },
-            child: Center(
-              child: Container(
-                child: Stack(
-                  children: [
-                    Hero(
-                      tag: _todo.uuid + '_back',
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                color: Colors.white,
-                width: 300.0,
-                height: 300.0,
-                margin: EdgeInsets.fromLTRB(50, 60, 50, 60),
-              ),
+            child: Container(
+              width: 300,
+              height: 300,
+              color: Colors.blue,
+              margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
             ),
           );
         });
