@@ -74,4 +74,19 @@ class TodoProvider with ChangeNotifier {
         !_toDoList[todo_index].tasks[task_index].is_checked;
     notifyListeners();
   }
+
+  int clearTodo() {
+    int count = 0;
+    for (var todo in _toDoList) {
+      if (todo.tasks.isEmpty) {
+        continue;
+      }
+      bool result = todo.tasks.every((task) => task.is_checked == true);
+      if (!result) {
+        continue;
+      }
+      count += 1;
+    }
+    return count;
+  }
 }
