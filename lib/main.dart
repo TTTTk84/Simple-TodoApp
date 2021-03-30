@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Todo List',
         theme: ThemeData(
-          accentColor: Colors.orange,
-          primaryColor: const Color(0xFFDE4435),
+          primaryColor: Colors.pinkAccent,
+          brightness: Brightness.light,
         ),
         home: HomePage(),
       ),

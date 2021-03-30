@@ -29,11 +29,64 @@ class _TodoBuilderState extends State<TodoBuilder>
               //   ),
               // );
             },
-            child: Container(
-              width: 300,
-              height: 300,
-              color: Colors.blue,
+            child: Card(
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
               margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
+              child: Column(
+                children: <Widget>[
+                  Stack(
+                    children: [
+                      Container(
+                        width: 300,
+                        height: 250,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: LinearGradient(
+                            begin: FractionalOffset.topCenter,
+                            end: FractionalOffset.bottomCenter,
+                            colors: [
+                              const Color(0xFF1111E6).withOpacity(0.6),
+                              const Color(0xFF6A8FFF).withOpacity(0.6),
+                            ],
+                            stops: const [
+                              0.0,
+                              1.0,
+                            ],
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 16,
+                        left: 16,
+                        child: Text(
+                          _todo.description,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 24,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  ButtonBar(
+                    alignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () {},
+                        child: Text('DELETE'),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text('EDIT'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         });

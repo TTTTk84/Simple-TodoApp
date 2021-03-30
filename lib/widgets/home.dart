@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Container(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("todo"),
+          title: Text("TODO LIST"),
           actions: <Widget>[
             IconButton(
               icon: Icon(
@@ -36,31 +36,57 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ],
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Spacer(),
-            Padding(
-              padding: EdgeInsets.only(left: 50.0),
-              child: Text(
-                '合計?件',
-                style: TextStyle(fontSize: 25.0),
+        body: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: FractionalOffset.topLeft,
+                  end: FractionalOffset.bottomRight,
+                  colors: [
+                    const Color(0xffe4a972).withOpacity(0.6),
+                    const Color(0xFFDE4435).withOpacity(0.6),
+                  ],
+                  stops: const [
+                    0.0,
+                    1.0,
+                  ],
+                ),
               ),
             ),
-            Spacer(flex: 2),
-            Padding(
-              padding: EdgeInsets.only(left: 50.0),
-              child: Text(
-                '完了済み?件',
-                style: TextStyle(fontSize: 25.0),
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Spacer(),
+                Padding(
+                  padding: EdgeInsets.only(left: 50.0),
+                  child: Text(
+                    '合計${todo_provider.itemsList.length}件',
+                    style: TextStyle(
+                      fontSize: 25.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Spacer(flex: 2),
+                Padding(
+                  padding: EdgeInsets.only(left: 50.0),
+                  child: Text(
+                    '完了済み?件',
+                    style: TextStyle(
+                      fontSize: 25.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Spacer(flex: 2),
+                Flexible(
+                  flex: 11,
+                  child: TodoBuilder(todo_provider.itemsList),
+                ),
+                Spacer(flex: 2),
+              ],
             ),
-            Spacer(flex: 2),
-            Flexible(
-              flex: 10,
-              child: TodoBuilder(todo_provider.itemsList),
-            ),
-            Spacer(flex: 2),
           ],
         ),
       ),
