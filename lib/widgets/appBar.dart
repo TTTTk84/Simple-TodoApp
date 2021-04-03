@@ -19,9 +19,17 @@ Widget TodoAppBar(BuildContext context) {
             SizedBox(
               height: 15,
             ),
-            Text(
-              'TODOLIST',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'TODO LIST',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+                Icon(
+                  Icons.add,
+                ),
+              ],
             ),
           ],
         ),
