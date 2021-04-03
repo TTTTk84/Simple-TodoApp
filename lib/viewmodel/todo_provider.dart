@@ -51,6 +51,18 @@ class TodoProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteTodo(Todo todo) {
+    int todo_index = searchTodoIndex(todo);
+    _toDoList.removeAt(todo_index);
+    notifyListeners();
+  }
+
+  void editTodo(Todo todo, String todo_description) {
+    int todo_index = searchTodoIndex(todo);
+    _toDoList[todo_index].description = todo_description;
+    notifyListeners();
+  }
+
   void createNewTask(Todo todo, String task_description) {
     final newtask =
         Task(task: task_description, uuid: DateTime.now().toString());

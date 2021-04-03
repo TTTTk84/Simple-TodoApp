@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/viewmodel/todo_provider.dart';
 import 'package:todo_app/widgets/detail.dart';
 
 class TodoBuilder extends StatefulWidget {
@@ -15,6 +16,7 @@ class _TodoBuilderState extends State<TodoBuilder>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
+    var todo_provider = Provider.of<TodoProvider>(context);
     return ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: widget.todos.length,
@@ -85,7 +87,9 @@ class _TodoBuilderState extends State<TodoBuilder>
                     alignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          todo_provider.deleteTodo(_todo);
+                        },
                         child: Text(
                           '削除',
                           style: TextStyle(
@@ -95,7 +99,9 @@ class _TodoBuilderState extends State<TodoBuilder>
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          todo_provider.editTodo(_todo, "test");
+                        },
                         child: Text(
                           '編集',
                           style: TextStyle(
