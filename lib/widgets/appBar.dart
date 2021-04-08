@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
 import 'package:todo_app/util.dart';
+import 'package:todo_app/viewmodel/todo_provider.dart';
+import 'package:todo_app/widgets/addTodoBottomSheet.dart';
 
 Widget TodoAppBar(BuildContext context) {
+  var todo_provider = Provider.of<TodoProvider>(context);
+
   return PreferredSize(
     preferredSize: Size.fromHeight(180.0),
     child: GradientAppBar(
       title: Container(
-        //margin: EdgeInsets.only(top: 20),
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.only(left: 20),
+        margin: EdgeInsets.only(left: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
-              height: 15,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -26,8 +27,21 @@ Widget TodoAppBar(BuildContext context) {
                   'TODO LIST',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
-                Icon(
-                  Icons.add,
+                IconButton(
+                  icon: Icon(
+                    Icons.add,
+                  ),
+                  onPressed: () async {
+                    var result = await showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      builder: (context) {
+                        return addTodoBottomSheet(AddModalStatus.add_todo);
+                      },
+                    );
+                    print('test $result');
+                  },
                 ),
               ],
             ),
@@ -43,7 +57,7 @@ Widget TodoAppBar(BuildContext context) {
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(10),
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
           padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
           decoration: BoxDecoration(
             color: CustomColors.HeaderGreyLight,

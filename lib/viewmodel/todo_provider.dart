@@ -2,7 +2,7 @@ import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:flutter/cupertino.dart';
 
-enum AddDialogStatus { add_todo, add_task }
+enum AddModalStatus { add_todo, add_task }
 enum TodoCardSettings { edit, delete }
 
 class TodoProvider with ChangeNotifier {
