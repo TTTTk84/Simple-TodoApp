@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/viewmodel/todo_provider.dart';
-import 'package:todo_app/widgets/add_newTodo.dart';
+import 'package:todo_app/widgets/addTodoBottomSheet.dart';
 
 class DetailPage extends StatefulWidget {
   Todo _todo;
@@ -107,7 +107,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                   String result = await showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return AddNewTodo(AddDialogStatus.add_task);
+                      //return AddNewTodo(AddDialogStatus.add_task);
                     },
                   );
                   todo_provider.createNewTask(widget._todo, result);

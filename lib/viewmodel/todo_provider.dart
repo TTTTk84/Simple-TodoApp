@@ -2,7 +2,8 @@ import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:flutter/cupertino.dart';
 
-enum AddDialogStatus { add_todo, add_task }
+enum AddModalStatus { add_todo, add_task }
+enum TodoCardSettings { edit, delete }
 
 class TodoProvider with ChangeNotifier {
   List<Todo> _toDoList = [
@@ -48,6 +49,18 @@ class TodoProvider with ChangeNotifier {
       [],
     );
     _toDoList.add(newtodo);
+    notifyListeners();
+  }
+
+  void deleteTodo(Todo todo) {
+    int todo_index = searchTodoIndex(todo);
+    _toDoList.removeAt(todo_index);
+    notifyListeners();
+  }
+
+  void editTodo(Todo todo, String todo_description) {
+    int todo_index = searchTodoIndex(todo);
+    _toDoList[todo_index].description = todo_description;
     notifyListeners();
   }
 
