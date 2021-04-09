@@ -6,6 +6,7 @@ import 'dart:math' as math;
 import 'package:todo_app/util.dart';
 import 'package:todo_app/viewmodel/todo_provider.dart';
 import 'package:todo_app/widgets/addTodoBottomSheet.dart';
+import 'package:todo_app/widgets/reminderPage.dart';
 
 Widget TodoAppBar(BuildContext context) {
   var todo_provider = Provider.of<TodoProvider>(context);
@@ -56,57 +57,67 @@ Widget TodoAppBar(BuildContext context) {
       ),
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(10),
-        child: Container(
-          margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
-          padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-          decoration: BoxDecoration(
-            color: CustomColors.HeaderGreyLight,
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    '期限の近いタスク',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 3),
-                  Text(
-                    'レポート締め切り',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                  SizedBox(height: 3),
-                  Text(
-                    '13.00 PM',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  )
-                ],
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (BuildContext context) => reminderPage(),
               ),
-              Transform.rotate(
-                angle: 0.35,
-                child: Icon(
-                  Icons.notifications_on,
-                  color: Colors.white,
-                  size: 45,
+            );
+          },
+          child: Container(
+            margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+            padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+            decoration: BoxDecoration(
+              color: CustomColors.HeaderGreyLight,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '期限の近いタスク',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 3),
+                    Text(
+                      'レポート締め切り',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    SizedBox(height: 3),
+                    Text(
+                      '13.00 PM',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    )
+                  ],
                 ),
-              ),
-            ],
+                Transform.rotate(
+                  angle: 0.35,
+                  child: Icon(
+                    Icons.notifications_on,
+                    color: Colors.white,
+                    size: 45,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

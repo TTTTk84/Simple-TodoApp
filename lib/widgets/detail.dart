@@ -20,108 +20,127 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
 
     Widget listItem(int index) {
       Task _task = widget._todo.tasks[index];
-      return Card(
-        child: GestureDetector(
-          onTap: () {
-            todo_provider.checkedTask(widget._todo, _task);
-          },
-          child: Dismissible(
-            key: ObjectKey(_task),
-            onDismissed: (direction) {
-              todo_provider.deleteTask(widget._todo, _task);
-            },
-            background: Container(
-              color: Colors.red,
-              child: ListTile(
-                leading: Icon(Icons.delete, color: Colors.white),
+      return Container(
+        padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: Checkbox(
+                value: true,
+                onChanged: (_) {},
+                activeColor: Color(0xFF1111E6).withOpacity(0.6),
               ),
             ),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 12.0),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      left: BorderSide(
-                        width: 4.0,
-                        color: Colors.orange,
-                      ),
-                    ),
-                  ),
-                  child: Row(children: [
-                    Checkbox(
-                      value: _task.is_checked,
-                      onChanged: (_) {
-                        todo_provider.checkedTask(widget._todo, _task);
-                      },
-                    ),
-                    Text(
-                      _task.task,
-                      textAlign: TextAlign.center,
-                    ),
-                  ]),
+            Expanded(
+              flex: 3,
+              child: TextFormField(
+                autofocus: false,
+                initialValue: '${_task.task}',
+                decoration: InputDecoration(
+                  hintText: '腹筋',
+                  border: InputBorder.none,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                      width: 0.5,
-                      color: Colors.grey,
-                    )),
-                  ),
+                keyboardType: TextInputType.text,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontStyle: FontStyle.normal,
                 ),
-              ],
+              ),
             ),
-          ),
+            Expanded(
+              flex: 2,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  '2020-01-01',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }
 
     return Stack(
       children: <Widget>[
+        Hero(
+          tag: widget._todo.uuid + '_background',
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(0.0),
+            ),
+          ),
+        ),
+        Container(
+          color: Colors.white,
+        ),
         Scaffold(
-          backgroundColor: Color(0xFF6A8FFF),
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
-            backgroundColor: Color(0xFF1111E6).withOpacity(0.4),
-            elevation: 0.0,
-            title: Text('${widget._todo.description}'),
-            leading: Material(
-              color: Colors.transparent,
-              type: MaterialType.transparency,
-              child: IconButton(
-                icon: Icon(Icons.arrow_back),
-                color: Colors.white,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+            leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.grey,
               ),
             ),
             actions: [
               IconButton(
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 26.0,
-                ),
                 onPressed: () async {
-                  String result = await showDialog(
+                  var result = await showModalBottomSheet(
                     context: context,
-                    builder: (BuildContext context) {
-                      //return AddNewTodo(AddDialogStatus.add_task);
+                    backgroundColor: Colors.transparent,
+                    isScrollControlled: true,
+                    builder: (context) {
+                      return addTodoBottomSheet(AddModalStatus.add_task);
                     },
                   );
-                  todo_provider.createNewTask(widget._todo, result);
+                  print('test $result');
                 },
+                padding: EdgeInsets.only(right: 10),
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+          body: Column(
+            children: <Widget>[
+              SizedBox(height: 80),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.only(left: 40),
+                child: Hero(
+                  tag: widget._todo.uuid + '_description',
+                  child: Text(
+                    '${widget._todo.description}',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+              SizedBox(height: 40),
+              Container(
+                height: MediaQuery.of(context).size.height / 1.5,
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
+                child: ListView.builder(
+                  itemCount: widget._todo.tasks.length,
+                  itemBuilder: (context, index) {
+                    return listItem(index);
+                  },
+                ),
               ),
             ],
           ),
-          body: ListView.builder(
-            itemCount: widget._todo.tasks.length,
-            itemBuilder: (context, index) {
-              return listItem(index);
-            },
-          ),
-        )
+        ),
       ],
     );
   }
