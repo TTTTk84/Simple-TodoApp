@@ -76,7 +76,7 @@ class addTodoContainer {
                     children: <Widget>[
                       SizedBox(height: 10),
                       Text(
-                        'カテゴリーを追加',
+                        'タスクを追加',
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -122,10 +122,41 @@ class addTodoContainer {
                         ),
                       ),
                       SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop<String>('test');
-                        },
+                      Container(
+                        margin: EdgeInsets.only(top: 30),
+                        height: 50,
+                        width: MediaQuery.of(context).size.width - 80,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: LinearGradient(
+                            begin: FractionalOffset.bottomRight,
+                            end: FractionalOffset.topLeft,
+                            colors: [
+                              const Color(0xFF6A8FFF).withOpacity(0.6),
+                              const Color(0xFF1111E6).withOpacity(0.6),
+                            ],
+                            stops: const [
+                              0.0,
+                              1.0,
+                            ],
+                          ),
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop<String>('test');
+                          },
+                          child: Text(
+                            'タスクを追加',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            primary: Colors.transparent,
+                          ),
+                        ),
                       ),
                     ],
                   ),
