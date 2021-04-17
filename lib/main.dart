@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:todo_app/viewmodel/todo_provider.dart';
-import 'package:todo_app/widgets/home.dart';
+
+import 'package:todo_app/views/homePage.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,17 +9,14 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => TodoProvider(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Todo List',
-        theme: ThemeData(
-          primaryColor: Colors.pinkAccent,
-          brightness: Brightness.light,
-        ),
-        home: HomePage(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Todo List',
+      theme: ThemeData(
+        primaryColor: Colors.pinkAccent,
+        brightness: Brightness.light,
       ),
+      home: HomePage(),
     );
   }
 }

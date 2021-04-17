@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:todo_app/db/query.dart';
 
 class DBProvider {
   final _databaseName = "MyDatabase.db";
@@ -18,16 +19,6 @@ class DBProvider {
     return _database;
   }
 
-  void _createTableV1(Batch batch) {
-    batch.execute('''
-    CREATE TABLE input_text(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      body TEXT NOT NULL,
-      created_at TEXT NOT NULL,
-      updated_at TEXT NOT NULL
-    ) ''');
-  }
-
   _initDatabase() async {
     final Directory documentsDirectory =
         await getApplicationDocumentsDirectory();
@@ -35,11 +26,8 @@ class DBProvider {
     return await openDatabase(
       path,
       version: _databaseVersion,
-      onCreate: (db, version) async {
-        var batch = db.batch();
-        _createTableV1(batch);
-        await batch.commit();
-      },
+      onConfigure: Query().onConfigure,
+      onCreate: Query().onCreate,
       onDowngrade: onDatabaseDowngradeDelete,
     );
   }

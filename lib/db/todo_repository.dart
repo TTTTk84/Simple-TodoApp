@@ -12,9 +12,9 @@ class TodoRepository {
       'created_at': now.toString(),
       'updated_at': now.toString(),
     };
-
     final db = await instance.database;
     final id = await db.insert(table, row);
+    print('id: ${id}');
     if (id == 0) return null;
 
     return Todo(

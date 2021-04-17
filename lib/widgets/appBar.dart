@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/db/todo_repository.dart';
 import 'dart:math' as math;
 
 import 'package:todo_app/util.dart';
-import 'package:todo_app/viewmodel/todo_provider.dart';
 import 'package:todo_app/widgets/addTodoBottomSheet.dart';
-import 'package:todo_app/widgets/reminderPage.dart';
+import 'package:todo_app/views/reminderPage.dart';
 
 Widget TodoAppBar(BuildContext context) {
-  var todo_provider = Provider.of<TodoProvider>(context);
-
   return PreferredSize(
     preferredSize: Size.fromHeight(180.0),
     child: GradientAppBar(
@@ -33,15 +31,16 @@ Widget TodoAppBar(BuildContext context) {
                     Icons.add,
                   ),
                   onPressed: () async {
-                    var result = await showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                      builder: (context) {
-                        return addTodoBottomSheet(AddModalStatus.add_todo);
-                      },
-                    );
-                    print('test $result');
+                    // var result = await showModalBottomSheet(
+                    //   context: context,
+                    //   backgroundColor: Colors.transparent,
+                    //   isScrollControlled: true,
+                    //   builder: (context) {
+                    //     return addTodoBottomSheet(AddModalStatus.add_todo);
+                    //   },
+                    // );
+                    // print('test $result');
+                    TodoRepository.create('temp');
                   },
                 ),
               ],

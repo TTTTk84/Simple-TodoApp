@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:todo_app/viewmodel/todo_provider.dart';
-import 'package:todo_app/widgets/detail.dart';
+import 'package:todo_app/util.dart';
+import 'package:todo_app/views/detailPage.dart';
 
 class TodoBuilder extends StatefulWidget {
   List<Todo> todos;
@@ -16,21 +17,20 @@ class _TodoBuilderState extends State<TodoBuilder>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    var todo_provider = Provider.of<TodoProvider>(context);
+    print('todos: ${widget.todos}');
     return ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: widget.todos.length,
         itemBuilder: (context, index) {
           Todo _todo = widget.todos[index];
-
           return InkWell(
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  fullscreenDialog: true,
-                  builder: (BuildContext context) => DetailPage(_todo),
-                ),
-              );
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //     fullscreenDialog: true,
+              //     builder: (BuildContext context) => DetailPage(_todo),
+              //   ),
+              // );
             },
             child: Container(
               decoration: BoxDecoration(
@@ -54,7 +54,7 @@ class _TodoBuilderState extends State<TodoBuilder>
                     Stack(
                       children: [
                         Hero(
-                          tag: _todo.uuid + '_background',
+                          tag: _todo.id.toString() + '_background',
                           child: Container(
                             width: 180,
                             height: MediaQuery.of(context).size.height / 4,
@@ -101,7 +101,7 @@ class _TodoBuilderState extends State<TodoBuilder>
                                   break;
                                 case TodoCardSettings.delete:
                                   print("delete clicked");
-                                  todo_provider.deleteTodo(_todo);
+                                  TodoRepository.delete(_todo.id);
                                   break;
                               }
                             },
@@ -111,7 +111,7 @@ class _TodoBuilderState extends State<TodoBuilder>
                           bottom: 16,
                           left: 16,
                           child: Hero(
-                            tag: _todo.uuid + '_description',
+                            tag: _todo.id.toString() + '_description',
                             child: Text(
                               _todo.description,
                               style: TextStyle(
