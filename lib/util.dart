@@ -5,6 +5,11 @@ enum TodoCardSettings {
   delete,
 }
 
+enum AddmodalStatus {
+  add_todo,
+  add_task,
+}
+
 class CustomColors {
   static const Color PurpleLight = Color.fromRGBO(248, 87, 195, 1);
   static const Color PurpleDark = Color.fromRGBO(224, 19, 156, 1);

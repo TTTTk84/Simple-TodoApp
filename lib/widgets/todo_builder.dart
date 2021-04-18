@@ -5,24 +5,18 @@ import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/util.dart';
 import 'package:todo_app/views/detailPage.dart';
 
-class TodoBuilder extends StatefulWidget {
+class TodoBuilder extends StatelessWidget {
   List<Todo> todos;
 
   TodoBuilder(this.todos);
-  @override
-  _TodoBuilderState createState() => _TodoBuilderState();
-}
 
-class _TodoBuilderState extends State<TodoBuilder>
-    with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    print('todos: ${widget.todos}');
     return ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: widget.todos.length,
+        itemCount: todos.length,
         itemBuilder: (context, index) {
-          Todo _todo = widget.todos[index];
+          Todo _todo = todos[index];
           return InkWell(
             onTap: () {
               // Navigator.of(context).push(

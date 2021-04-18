@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/db/todo_repository.dart';
-import 'dart:math' as math;
 
 import 'package:todo_app/util.dart';
 import 'package:todo_app/widgets/addTodoBottomSheet.dart';
 import 'package:todo_app/views/reminderPage.dart';
 
-Widget TodoAppBar(BuildContext context) {
-  return PreferredSize(
-    preferredSize: Size.fromHeight(180.0),
-    child: GradientAppBar(
+class TodoAppBar extends StatelessWidget with PreferredSizeWidget {
+  @override
+  Size get preferredSize => const Size.fromHeight(180.0);
+
+  @override
+  Widget build(BuildContext context) {
+    var todo_repository = Provider.of<TodoRepository>(context);
+    return GradientAppBar(
       title: Container(
         width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.only(left: 20),
@@ -31,16 +34,17 @@ Widget TodoAppBar(BuildContext context) {
                     Icons.add,
                   ),
                   onPressed: () async {
-                    // var result = await showModalBottomSheet(
-                    //   context: context,
-                    //   backgroundColor: Colors.transparent,
-                    //   isScrollControlled: true,
-                    //   builder: (context) {
-                    //     return addTodoBottomSheet(AddModalStatus.add_todo);
-                    //   },
-                    // );
-                    // print('test $result');
-                    TodoRepository.create('temp');
+                    var result = await showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      builder: (context) {
+                        return addTodoBottomSheet(AddmodalStatus.add_todo);
+                      },
+                    );
+                    if (result == null) return;
+                    await todo_repository.create('${result}');
+                    await todo_repository.getAll();
                   },
                 ),
               ],
@@ -120,6 +124,6 @@ Widget TodoAppBar(BuildContext context) {
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

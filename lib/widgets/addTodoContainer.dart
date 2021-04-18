@@ -3,8 +3,10 @@ import 'package:todo_app/util.dart';
 
 class addTodoContainer {
   BuildContext context;
+  var textController = TextEditingController();
+  GlobalKey<FormState> formKey;
 
-  addTodoContainer(this.context);
+  addTodoContainer(this.context, this.formKey);
 
   Widget todoContainer() {
     return Container(
@@ -82,6 +84,7 @@ class addTodoContainer {
                       Container(
                         width: MediaQuery.of(context).size.width / 1.2,
                         child: TextFormField(
+                          controller: textController,
                           autofocus: false,
                           decoration: InputDecoration(
                             hintText: "筋トレ",
@@ -92,9 +95,9 @@ class addTodoContainer {
                             fontSize: 22,
                             fontStyle: FontStyle.normal,
                           ),
-                          // validator: (v) {
-                          //   print('$v');
-                          // },
+                          validator: (v) {
+                            if (v.isEmpty || v == null) return 'テキストを入力してください';
+                          },
                         ),
                       ),
                       SizedBox(height: 20),
@@ -117,20 +120,27 @@ class addTodoContainer {
                             ],
                           ),
                         ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop<String>('test');
-                          },
-                          child: Text(
-                            'カテゴリを追加',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w800,
+                        child: Form(
+                          key: formKey,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (formKey.currentState.validate()) {
+                                formKey.currentState.save();
+                                Navigator.of(context)
+                                    .pop<String>('${textController.text}');
+                              }
+                            },
+                            child: Text(
+                              'カテゴリを追加',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w800,
+                              ),
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            primary: Colors.transparent,
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              primary: Colors.transparent,
+                            ),
                           ),
                         ),
                       ),

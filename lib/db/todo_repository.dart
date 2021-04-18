@@ -1,11 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:todo_app/db/db_provider.dart';
 import 'package:todo_app/models/todo.dart';
 
-class TodoRepository {
+class TodoRepository with ChangeNotifier {
   static String table = 'todo';
   static DBProvider instance = DBProvider.instance;
+  List<Todo> todolist = [];
 
-  static Future<Todo> create(String text) async {
+  List<Todo> get todo_items => todolist;
+
+  Future<Todo> create(String text) async {
     DateTime now = DateTime.now();
     final Map<String, dynamic> row = {
       'description': text,
@@ -14,24 +18,29 @@ class TodoRepository {
     };
     final db = await instance.database;
     final id = await db.insert(table, row);
-    print('id: ${id}');
     if (id == 0) return null;
-
-    return Todo(
+    Todo todo = Todo(
       id: id,
       description: row['description'],
       createdAt: now,
       updatedAt: now,
     );
+    this.todolist.add(todo);
+    notifyListeners();
+    return todo;
   }
 
-  static Future<List<Todo>> getAll() async {
+  Future<List<Todo>> getAll() async {
     final db = await instance.database;
     final rows =
         await db.rawQuery('SELECT * FROM $table ORDER BY updated_at DESC');
     if (rows.isEmpty) return null;
+    final todolist = rows.map((e) => Todo.fromMap(e)).toList();
 
-    return rows.map((e) => Todo.fromMap(e)).toList();
+    this.todolist = todolist;
+
+    notifyListeners();
+    return todolist;
   }
 
   static Future<Todo> single(int id) async {

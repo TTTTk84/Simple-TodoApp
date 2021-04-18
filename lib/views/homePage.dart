@@ -7,31 +7,36 @@ import 'package:todo_app/widgets/addTodoBottomSheet.dart';
 import 'package:todo_app/widgets/appBar.dart';
 import 'package:todo_app/widgets/todo_builder.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
+class HomePage extends StatelessWidget {
+//   @override
+//   _HomePageState createState() => _HomePageState();
+// }
 
-class _HomePageState extends State<HomePage> {
-  var todos = FutureBuilder(
-    future: TodoRepository.getAll(),
-    builder: (BuildContext context, AsyncSnapshot snapshot) {
-      switch (snapshot.connectionState) {
-        case ConnectionState.none:
-        case ConnectionState.waiting:
-          return Text('loading...');
-        default:
-          if (snapshot.hasError)
-            return Text('Error: ${snapshot.error}');
-          else
-            return TodoBuilder(snapshot.data);
-      }
-    },
-  );
+// class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
+    var todo_provider = Provider.of<TodoRepository>(context, listen: false);
+    var todos = FutureBuilder(
+      future: todo_provider.getAll(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        print('builder:');
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+            return Text('loading...');
+          default:
+            if (snapshot.hasError)
+              return Text('Error: ${snapshot.error}');
+            else
+              return Consumer<TodoRepository>(
+                builder: (cctx, todo, child) => TodoBuilder(todo.todo_items),
+              );
+        }
+      },
+    );
+
     return Container(
       child: Scaffold(
-        appBar: TodoAppBar(context),
+        appBar: TodoAppBar(),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

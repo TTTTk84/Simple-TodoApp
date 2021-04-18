@@ -20,7 +20,6 @@ class Query {
       is_enabled INTEGER NOT NULL,
       timer TEXT NOT NULL,
       todo_id INTEGER NOT NULL,
-      FOREIGN KEY (todo_id) REFERENCES todo (id) ON DELETE SET NULL ON UPDATE CASCADE,
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL
   );

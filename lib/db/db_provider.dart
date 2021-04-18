@@ -23,6 +23,7 @@ class DBProvider {
     final Directory documentsDirectory =
         await getApplicationDocumentsDirectory();
     final String path = join(documentsDirectory.path, _databaseName);
+    print('path ${path}');
     return await openDatabase(
       path,
       version: _databaseVersion,
