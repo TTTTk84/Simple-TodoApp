@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/util.dart';
-import 'package:todo_app/widgets/addTodoBottomSheet.dart';
 import 'package:todo_app/widgets/appBar.dart';
 import 'package:todo_app/widgets/todo_builder.dart';
 
@@ -18,7 +17,6 @@ class HomePage extends StatelessWidget {
     var todos = FutureBuilder(
       future: todo_provider.getAll(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        print('builder:');
         switch (snapshot.connectionState) {
           case ConnectionState.none:
           case ConnectionState.waiting:

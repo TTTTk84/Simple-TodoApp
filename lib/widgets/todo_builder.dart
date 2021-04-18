@@ -4,6 +4,7 @@ import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/util.dart';
 import 'package:todo_app/views/detailPage.dart';
+import 'package:todo_app/widgets/todoModal.dart';
 
 class TodoBuilder extends StatelessWidget {
   List<Todo> todos;
@@ -12,6 +13,7 @@ class TodoBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var todo_repository = Provider.of<TodoRepository>(context);
     return ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: todos.length,
@@ -88,14 +90,28 @@ class TodoBuilder extends StatelessWidget {
                                 value: TodoCardSettings.delete,
                               ),
                             ],
-                            onSelected: (setting) {
+                            onSelected: (setting) async {
                               switch (setting) {
                                 case TodoCardSettings.edit:
-                                  print("edit");
+                                  final initText =
+                                      await todo_repository.single(_todo.id);
+                                  var result = await showModalBottomSheet(
+                                    context: context,
+                                    backgroundColor: Colors.transparent,
+                                    isScrollControlled: true,
+                                    builder: (context) {
+                                      return TodoModal(initText.description,
+                                          modalStatus.edit);
+                                    },
+                                  );
+                                  if (result == null) return;
+                                  await todo_repository.update(
+                                      id: _todo.id, text: result);
+                                  await todo_repository.getAll();
                                   break;
                                 case TodoCardSettings.delete:
-                                  print("delete clicked");
-                                  TodoRepository.delete(_todo.id);
+                                  await todo_repository.delete(_todo.id);
+                                  await todo_repository.getAll();
                                   break;
                               }
                             },

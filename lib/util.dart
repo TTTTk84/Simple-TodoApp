@@ -5,9 +5,9 @@ enum TodoCardSettings {
   delete,
 }
 
-enum AddmodalStatus {
-  add_todo,
-  add_task,
+enum modalStatus {
+  add,
+  edit,
 }
 
 class CustomColors {

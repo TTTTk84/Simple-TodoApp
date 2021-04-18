@@ -25,7 +25,13 @@ class Query {
   );
   ''';
 
-  final insert_query = '''
+  final insert_todo_query = '''
+  INSERT INTO todo(description,created_at,updated_at)
+    values('筋トレ','${DateTime.now().toString()}','${DateTime.now().toString()}'),
+          ('プログラミング','${DateTime.now().toString()}','${DateTime.now().toString()}');
+  ''';
+
+  final insert_task_query = '''
   INSERT INTO todo(description,created_at,updated_at)
     values('todo1','${DateTime.now().toString()}','${DateTime.now().toString()}'),
           ('todo2','${DateTime.now().toString()}','${DateTime.now().toString()}'),
@@ -35,7 +41,7 @@ class Query {
   onCreate(Database db, int version) async {
     await db.execute("${todo_query}");
     await db.execute("${task_query}");
-    await db.execute("${insert_query}");
+    await db.execute("${insert_todo_query}");
   }
 
   onConfigure(Database db) async {

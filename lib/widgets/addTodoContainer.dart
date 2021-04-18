@@ -4,9 +4,9 @@ import 'package:todo_app/util.dart';
 class addTodoContainer {
   BuildContext context;
   var textController = TextEditingController();
-  GlobalKey<FormState> formKey;
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  addTodoContainer(this.context, this.formKey);
+  addTodoContainer(this.context);
 
   Widget todoContainer() {
     return Container(
@@ -95,9 +95,15 @@ class addTodoContainer {
                             fontSize: 22,
                             fontStyle: FontStyle.normal,
                           ),
-                          validator: (v) {
-                            if (v.isEmpty || v == null) return 'テキストを入力してください';
+                          validator: (String v) {
+                            print('v: $v');
+                            if (v.isEmpty || v == null) {
+                              print('ok');
+                              return 'テキストを入力してください';
+                            }
+                            return null;
                           },
+                          onSaved: (v) {},
                         ),
                       ),
                       SizedBox(height: 20),
@@ -121,11 +127,11 @@ class addTodoContainer {
                           ),
                         ),
                         child: Form(
-                          key: formKey,
+                          key: _formKey,
                           child: ElevatedButton(
                             onPressed: () {
-                              if (formKey.currentState.validate()) {
-                                formKey.currentState.save();
+                              if (_formKey.currentState.validate()) {
+                                _formKey.currentState.save();
                                 Navigator.of(context)
                                     .pop<String>('${textController.text}');
                               }

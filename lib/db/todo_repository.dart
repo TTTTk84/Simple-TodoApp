@@ -43,7 +43,7 @@ class TodoRepository with ChangeNotifier {
     return todolist;
   }
 
-  static Future<Todo> single(int id) async {
+  Future<Todo> single(int id) async {
     final db = await instance.database;
     final rows = await db.rawQuery('SELECT * FROM $table WHERE id = ?', [id]);
     if (rows.isEmpty) return null;
@@ -51,7 +51,7 @@ class TodoRepository with ChangeNotifier {
     return Todo.fromMap(rows.first);
   }
 
-  static Future<int> update({int id, String text}) async {
+  Future<int> update({int id, String text}) async {
     String now = DateTime.now().toString();
     final row = {
       'id': id,
@@ -62,8 +62,10 @@ class TodoRepository with ChangeNotifier {
     return await db.update(table, row, where: 'id = ?', whereArgs: [id]);
   }
 
-  static Future<int> delete(int id) async {
+  Future<int> delete(int id) async {
     final db = await instance.database;
-    return db.delete(table, where: 'id = ?', whereArgs: [id]);
+    var i = db.delete(table, where: 'id = ?', whereArgs: [id]);
+    notifyListeners();
+    return i;
   }
 }

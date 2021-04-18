@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/db/todo_repository.dart';
 
 import 'package:todo_app/util.dart';
-import 'package:todo_app/widgets/addTodoBottomSheet.dart';
 import 'package:todo_app/views/reminderPage.dart';
+import 'package:todo_app/widgets/todoModal.dart';
 
 class TodoAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
@@ -39,7 +39,7 @@ class TodoAppBar extends StatelessWidget with PreferredSizeWidget {
                       backgroundColor: Colors.transparent,
                       isScrollControlled: true,
                       builder: (context) {
-                        return addTodoBottomSheet(AddmodalStatus.add_todo);
+                        return TodoModal('', modalStatus.add);
                       },
                     );
                     if (result == null) return;
