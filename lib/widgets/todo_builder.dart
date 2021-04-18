@@ -21,12 +21,12 @@ class TodoBuilder extends StatelessWidget {
           Todo _todo = todos[index];
           return InkWell(
             onTap: () {
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     fullscreenDialog: true,
-              //     builder: (BuildContext context) => DetailPage(_todo),
-              //   ),
-              // );
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  fullscreenDialog: true,
+                  builder: (BuildContext context) => DetailPage(_todo),
+                ),
+              );
             },
             child: Container(
               decoration: BoxDecoration(
