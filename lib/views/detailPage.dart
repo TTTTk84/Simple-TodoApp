@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:todo_app/viewmodel/todo_provider.dart';
-import 'package:todo_app/widgets/addTodoBottomSheet.dart';
 
 class DetailPage extends StatefulWidget {
   Todo _todo;
@@ -16,7 +15,7 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    var todo_provider = Provider.of<TodoProvider>(context);
+    var todo_provider = Provider.of<TodoRepository>(context);
 
     Widget listItem(int index) {
       Task _task = widget._todo.tasks[index];

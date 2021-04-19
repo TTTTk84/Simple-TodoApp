@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:todo_app/viewmodel/todo_provider.dart';
-import 'package:todo_app/widgets/detail.dart';
+import 'package:todo_app/util.dart';
+import 'package:todo_app/views/detailPage.dart';
+import 'package:todo_app/widgets/todoModal.dart';
 
-class TodoBuilder extends StatefulWidget {
+class TodoBuilder extends StatelessWidget {
   List<Todo> todos;
 
   TodoBuilder(this.todos);
-  @override
-  _TodoBuilderState createState() => _TodoBuilderState();
-}
 
-class _TodoBuilderState extends State<TodoBuilder>
-    with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    var todo_provider = Provider.of<TodoProvider>(context);
+    var todo_repository = Provider.of<TodoRepository>(context);
     return ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: widget.todos.length,
+        itemCount: todos.length,
         itemBuilder: (context, index) {
-          Todo _todo = widget.todos[index];
-
+          Todo _todo = todos[index];
           return InkWell(
             onTap: () {
               Navigator.of(context).push(
@@ -54,7 +50,7 @@ class _TodoBuilderState extends State<TodoBuilder>
                     Stack(
                       children: [
                         Hero(
-                          tag: _todo.uuid + '_background',
+                          tag: _todo.id.toString() + '_background',
                           child: Container(
                             width: 180,
                             height: MediaQuery.of(context).size.height / 4,
@@ -94,14 +90,28 @@ class _TodoBuilderState extends State<TodoBuilder>
                                 value: TodoCardSettings.delete,
                               ),
                             ],
-                            onSelected: (setting) {
+                            onSelected: (setting) async {
                               switch (setting) {
                                 case TodoCardSettings.edit:
-                                  print("edit");
+                                  final initText =
+                                      await todo_repository.single(_todo.id);
+                                  var result = await showModalBottomSheet(
+                                    context: context,
+                                    backgroundColor: Colors.transparent,
+                                    isScrollControlled: true,
+                                    builder: (context) {
+                                      return TodoModal(initText.description,
+                                          modalStatus.edit);
+                                    },
+                                  );
+                                  if (result == null) return;
+                                  await todo_repository.update(
+                                      id: _todo.id, text: result);
+                                  await todo_repository.getAll();
                                   break;
                                 case TodoCardSettings.delete:
-                                  print("delete clicked");
-                                  todo_provider.deleteTodo(_todo);
+                                  await todo_repository.delete(_todo.id);
+                                  await todo_repository.getAll();
                                   break;
                               }
                             },
@@ -111,7 +121,7 @@ class _TodoBuilderState extends State<TodoBuilder>
                           bottom: 16,
                           left: 16,
                           child: Hero(
-                            tag: _todo.uuid + '_description',
+                            tag: _todo.id.toString() + '_description',
                             child: Text(
                               _todo.description,
                               style: TextStyle(

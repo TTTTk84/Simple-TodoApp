@@ -1,10 +1,22 @@
-import 'package:flutter/cupertino.dart';
-import 'package:todo_app/models/task.dart';
+import 'package:flutter/material.dart';
 
-class Todo with ChangeNotifier {
-  final String uuid;
-  String description;
-  List<Task> tasks;
+class Todo {
+  Todo({
+    @required this.id,
+    @required this.description,
+    @required this.createdAt,
+    @required this.updatedAt,
+  });
 
-  Todo(this.uuid, this.description, this.tasks);
+  final int id;
+  final String description;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  factory Todo.fromMap(Map<String, dynamic> json) => Todo(
+        id: json['id'],
+        description: json['description'],
+        createdAt: json['createdAt'],
+        updatedAt: json['updatedAt'],
+      );
 }
