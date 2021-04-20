@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/util.dart';
 
 class Task {
   Task({
@@ -24,11 +25,11 @@ class Task {
   factory Task.fromMap(Map<String, dynamic> json) => Task(
         id: json['id'],
         description: json['description'],
-        is_checked: json['is_checked'],
-        is_enabled: json['is_enabled'],
-        timer: json['timer'],
+        is_checked: UtilTool.changeInttoBool(json['is_checked']),
+        is_enabled: UtilTool.changeInttoBool(json['is_enabled']),
+        timer: DateTime.tryParse(json['timer'].toString()),
         todo_id: json['todo_id'],
-        createdAt: json['createdAt'],
-        updatedAt: json['updatedAt'],
+        createdAt: DateTime.tryParse(json['createdAt'].toString()),
+        updatedAt: DateTime.tryParse(json['updatedAt'].toString()),
       );
 }

@@ -1,19 +1,24 @@
+import 'package:flutter/material.dart';
 import 'package:sqflite/sql.dart';
 import 'package:todo_app/db/db_provider.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/util.dart';
 
-class TaskRepository {
+class TaskRepository with ChangeNotifier {
   static String table = 'task';
   static DBProvider instance = DBProvider.instance;
+  List<Task> tasklist = [];
 
-  static Future<Task> create(Task task) async {
+  List<Task> get task_items => tasklist;
+
+  Future<Task> create(Task task) async {
     DateTime now = DateTime.now();
     final Map<String, dynamic> row = {
       'description': task.description,
-      'is_checked': task.is_checked,
-      'is_enabled': task.is_enabled,
-      'timer': task.timer,
+      'is_checked': UtilTool.changeBooltoInt(task.is_checked),
+      'is_enabled': UtilTool.changeBooltoInt(task.is_enabled),
+      'timer': task.timer.toString(),
       'todo_id': task.todo_id,
       'created_at': now.toString(),
       'updated_at': now.toString(),
@@ -25,29 +30,34 @@ class TaskRepository {
       row,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-
-    return Task(
+    Task _task = Task(
       id: id,
       description: row['description'],
-      is_checked: row['is_checked'],
-      is_enabled: row['is_enabled'],
-      timer: row['timer'],
+      is_checked: UtilTool.changeInttoBool(row['is_checked']),
+      is_enabled: UtilTool.changeInttoBool(row['is_enabled']),
+      timer: row['timer'] as DateTime,
       todo_id: row['todo_id'],
-      createdAt: row['createdAt'],
-      updatedAt: row['updatedAt'],
+      createdAt: row['createdAt'] as DateTime,
+      updatedAt: row['updatedAt'] as DateTime,
     );
+
+    notifyListeners();
+    return _task;
   }
 
-  static Future<List<Task>> getAll() async {
+  Future<List<Task>> getTasks(int todo_id) async {
     final db = await instance.database;
     final rows =
-        await db.rawQuery('SELECT * FROM $table ORDER BY updated_at DESC');
+        await db.rawQuery('SELECT * FROM $table WHERE todo_id = ?', [todo_id]);
     if (rows.isEmpty) return null;
+    final tasklist = rows.map((e) => Task.fromMap(e)).toList();
+    this.tasklist = tasklist;
 
-    return rows.map((e) => Task.fromMap(e)).toList();
+    notifyListeners();
+    return tasklist;
   }
 
-  static Future<Task> single(int id) async {
+  Future<Task> single(int id) async {
     final db = await instance.database;
     final rows = await db.rawQuery('SELECT * FROM $table WHERE id = ?', [id]);
     if (rows.isEmpty) return null;

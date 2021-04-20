@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
 
-class DetailPage extends StatefulWidget {
-  Todo _todo;
+class TaskBuilder extends StatelessWidget {
+  Todo todo;
+  List<Task> tasks;
 
-  DetailPage(this._todo);
-  @override
-  _DetailPageState createState() => _DetailPageState();
-}
+  TaskBuilder(this.todo, this.tasks);
 
-class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
-  @override
   Widget build(BuildContext context) {
-    var todo_provider = Provider.of<TodoRepository>(context);
+    var task_provider = Provider.of<TaskRepository>(context);
 
     Widget listItem(int index) {
-      Task _task = widget._todo.tasks[index];
+      Task _task = tasks[index];
       return Container(
         padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
         child: Row(
@@ -35,7 +32,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
               flex: 3,
               child: TextFormField(
                 autofocus: false,
-                initialValue: '${_task.task}',
+                initialValue: '${_task.description}',
                 decoration: InputDecoration(
                   hintText: '腹筋',
                   border: InputBorder.none,
@@ -65,7 +62,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
     return Stack(
       children: <Widget>[
         Hero(
-          tag: widget._todo.uuid + '_background',
+          tag: todo.id.toString() + '_background',
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -96,7 +93,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                     backgroundColor: Colors.transparent,
                     isScrollControlled: true,
                     builder: (context) {
-                      return addTodoBottomSheet(AddModalStatus.add_task);
+                      //return addTodoBottomSheet(AddModalStatus.add_task);
                     },
                   );
                   print('test $result');
@@ -118,9 +115,9 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.only(left: 40),
                 child: Hero(
-                  tag: widget._todo.uuid + '_description',
+                  tag: todo.id.toString() + '_description',
                   child: Text(
-                    '${widget._todo.description}',
+                    '${todo.description}',
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
                   ),
                 ),
@@ -131,7 +128,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                 width: MediaQuery.of(context).size.width,
                 margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
                 child: ListView.builder(
-                  itemCount: widget._todo.tasks.length,
+                  itemCount: tasks.length,
                   itemBuilder: (context, index) {
                     return listItem(index);
                   },

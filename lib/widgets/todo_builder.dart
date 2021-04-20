@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/util.dart';
-import 'package:todo_app/views/detailPage.dart';
+import 'package:todo_app/views/task_builder.dart';
 import 'package:todo_app/widgets/todoModal.dart';
 
 class TodoBuilder extends StatelessWidget {
@@ -13,7 +14,27 @@ class TodoBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var todo_repository = Provider.of<TodoRepository>(context);
+    var todo_provider = Provider.of<TodoRepository>(context);
+    var task_provider = Provider.of<TaskRepository>(context);
+    task_builder(Todo _todo) => FutureBuilder(
+          future: task_provider.getTasks(_todo.id),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+                return Text('loading...');
+              default:
+                if (snapshot.hasError)
+                  return Text('Error: ${snapshot.error}');
+                else
+                  return Consumer<TaskRepository>(
+                    builder: (cctx, task, child) =>
+                        TaskBuilder(_todo, task_provider.task_items),
+                  );
+            }
+          },
+        );
+
     return ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: todos.length,
@@ -24,7 +45,7 @@ class TodoBuilder extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   fullscreenDialog: true,
-                  builder: (BuildContext context) => DetailPage(_todo),
+                  builder: (BuildContext context) => task_builder(_todo),
                 ),
               );
             },
@@ -94,7 +115,7 @@ class TodoBuilder extends StatelessWidget {
                               switch (setting) {
                                 case TodoCardSettings.edit:
                                   final initText =
-                                      await todo_repository.single(_todo.id);
+                                      await todo_provider.single(_todo.id);
                                   var result = await showModalBottomSheet(
                                     context: context,
                                     backgroundColor: Colors.transparent,
@@ -105,13 +126,13 @@ class TodoBuilder extends StatelessWidget {
                                     },
                                   );
                                   if (result == null) return;
-                                  await todo_repository.update(
+                                  await todo_provider.update(
                                       id: _todo.id, text: result);
-                                  await todo_repository.getAll();
+                                  await todo_provider.getAll();
                                   break;
                                 case TodoCardSettings.delete:
-                                  await todo_repository.delete(_todo.id);
-                                  await todo_repository.getAll();
+                                  await todo_provider.delete(_todo.id);
+                                  await todo_provider.getAll();
                                   break;
                               }
                             },

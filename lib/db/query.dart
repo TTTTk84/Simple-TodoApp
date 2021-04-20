@@ -34,9 +34,11 @@ class Query {
 
   final insert_task_query = '''
   INSERT INTO task(description,is_checked,is_enabled,timer,todo_id,created_at,updated_at)
-    values('html', false, false, '$now', 1, '$now', '$now'),
-          ('css', false, false, '$now', 1, '$now', '$now'),
-          ('js', false, false, '$now', 1, '$now', '$now');
+    values('html', 0, 0, '$now', 1, '$now', '$now'),
+          ('css', 0, 0, '$now', 1, '$now', '$now'),
+          ('js', 0, 0, '$now', 1, '$now', '$now'),
+          ('腹筋', 0, 0, '$now', 2, '$now', '$now'),
+          ('背筋', 0, 0, '$now', 2, '$now', '$now');
   ''';
 
   onCreate(Database db, int version) async {
