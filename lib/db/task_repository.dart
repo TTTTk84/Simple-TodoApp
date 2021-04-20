@@ -40,7 +40,7 @@ class TaskRepository with ChangeNotifier {
       createdAt: row['createdAt'] as DateTime,
       updatedAt: row['updatedAt'] as DateTime,
     );
-
+    this.tasklist.add(_task);
     notifyListeners();
     return _task;
   }
@@ -65,6 +65,34 @@ class TaskRepository with ChangeNotifier {
     return Task.fromMap(rows.first);
   }
 
+  Future<void> changeCheck(Task task) async {
+    final row = {
+      'is_checked': !task.is_checked,
+    };
+    final db = await instance.database;
+    await db.update(
+      table,
+      row,
+      where: 'id = ?',
+      whereArgs: [task.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    var _tasklist = this.tasklist;
+    _tasklist.asMap().forEach((i, v) {
+      if (v.id == task.id) {
+        this.tasklist[i].is_checked = !task.is_checked;
+      }
+    });
+    notifyListeners();
+  }
+
+  Future<void> delete(Task task) async {
+    final db = await instance.database;
+    await db.delete(table, where: 'id = ?', whereArgs: [task.id]);
+    this.tasklist.remove(task);
+    notifyListeners();
+  }
+
   static Future<int> update({int id, String text}) async {
     String now = DateTime.now().toString();
     final row = {
@@ -80,11 +108,6 @@ class TaskRepository with ChangeNotifier {
       whereArgs: [id],
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-  }
-
-  static Future<int> delete(int id) async {
-    final db = await instance.database;
-    return db.delete(table, where: 'id = ?', whereArgs: [id]);
   }
 
   static void deleteTasks(Todo todo) async {

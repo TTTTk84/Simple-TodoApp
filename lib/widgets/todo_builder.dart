@@ -4,7 +4,7 @@ import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/util.dart';
-import 'package:todo_app/views/task_builder.dart';
+import 'package:todo_app/views/task_builderPage.dart';
 import 'package:todo_app/widgets/todoModal.dart';
 
 class TodoBuilder extends StatelessWidget {
@@ -114,25 +114,21 @@ class TodoBuilder extends StatelessWidget {
                             onSelected: (setting) async {
                               switch (setting) {
                                 case TodoCardSettings.edit:
-                                  final initText =
-                                      await todo_provider.single(_todo.id);
-                                  var result = await showModalBottomSheet(
+                                  String result = await showModalBottomSheet(
                                     context: context,
                                     backgroundColor: Colors.transparent,
                                     isScrollControlled: true,
                                     builder: (context) {
-                                      return TodoModal(initText.description,
-                                          modalStatus.edit);
+                                      return TodoModal(
+                                          _todo.description, modalStatus.edit);
                                     },
                                   );
                                   if (result == null) return;
-                                  await todo_provider.update(
-                                      id: _todo.id, text: result);
-                                  await todo_provider.getAll();
+                                  _todo.description = result;
+                                  await todo_provider.update(_todo);
                                   break;
                                 case TodoCardSettings.delete:
-                                  await todo_provider.delete(_todo.id);
-                                  await todo_provider.getAll();
+                                  await todo_provider.delete(_todo);
                                   break;
                               }
                             },

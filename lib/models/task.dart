@@ -5,8 +5,8 @@ class Task {
   Task({
     @required this.id,
     @required this.description,
-    @required this.is_checked,
-    @required this.is_enabled,
+    @required this.is_checked = false,
+    @required this.is_enabled = false,
     @required this.timer,
     @required this.todo_id,
     @required this.createdAt,
@@ -14,13 +14,13 @@ class Task {
   });
 
   final int id;
-  final String description;
-  final bool is_checked;
-  final bool is_enabled;
-  final DateTime timer;
+  String description;
+  bool is_checked;
+  bool is_enabled;
+  DateTime timer;
   final int todo_id;
   final DateTime createdAt;
-  final DateTime updatedAt;
+  DateTime updatedAt;
 
   factory Task.fromMap(Map<String, dynamic> json) => Task(
         id: json['id'],

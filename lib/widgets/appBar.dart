@@ -44,7 +44,6 @@ class TodoAppBar extends StatelessWidget with PreferredSizeWidget {
                     );
                     if (result == null) return;
                     await todo_repository.create('${result}');
-                    await todo_repository.getAll();
                   },
                 ),
               ],
