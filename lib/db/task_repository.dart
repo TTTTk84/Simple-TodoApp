@@ -30,16 +30,7 @@ class TaskRepository with ChangeNotifier {
       row,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    Task _task = Task(
-      id: id,
-      description: row['description'],
-      is_checked: UtilTool.changeInttoBool(row['is_checked']),
-      is_enabled: UtilTool.changeInttoBool(row['is_enabled']),
-      timer: row['timer'] as DateTime,
-      todo_id: row['todo_id'],
-      createdAt: row['createdAt'] as DateTime,
-      updatedAt: row['updatedAt'] as DateTime,
-    );
+    Task _task = Task.fromMap(row);
     this.tasklist.add(_task);
     notifyListeners();
     return _task;
@@ -93,21 +84,29 @@ class TaskRepository with ChangeNotifier {
     notifyListeners();
   }
 
-  static Future<int> update({int id, String text}) async {
+  Future<void> update(Task task) async {
     String now = DateTime.now().toString();
     final row = {
-      'id': id,
-      'description': text,
+      'id': task.id,
+      'description': task.description,
       'updated_at': now,
     };
     final db = await instance.database;
-    return db.update(
+    await db.update(
       table,
       row,
       where: 'id = ?',
-      whereArgs: [id],
+      whereArgs: [task.id],
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+
+    var _tasklist = this.tasklist;
+    _tasklist.asMap().forEach((i, v) {
+      if (v.id == task.id) {
+        this.tasklist[i] = task;
+      }
+    });
+    notifyListeners();
   }
 
   static void deleteTasks(Todo todo) async {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/db/todo_repository.dart';
+import 'package:todo_app/models/todo.dart';
 
 import 'package:todo_app/util.dart';
 import 'package:todo_app/views/reminderPage.dart';
@@ -34,16 +35,16 @@ class TodoAppBar extends StatelessWidget with PreferredSizeWidget {
                     Icons.add,
                   ),
                   onPressed: () async {
+                    Todo new_todo = Todo();
                     var result = await showModalBottomSheet(
                       context: context,
                       backgroundColor: Colors.transparent,
                       isScrollControlled: true,
                       builder: (context) {
-                        return TodoModal('', modalStatus.add);
+                        return TodoModal(new_todo, modalStatus.add);
                       },
                     );
                     if (result == null) return;
-                    await todo_repository.create('${result}');
                   },
                 ),
               ],

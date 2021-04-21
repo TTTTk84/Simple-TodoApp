@@ -11,7 +11,6 @@ import 'package:todo_app/widgets/taskModal.dart';
 class TaskBuilder extends StatelessWidget {
   Todo todo;
   List<Task> tasks;
-  Task new_task = Task();
 
   TaskBuilder(this.todo, this.tasks);
 
@@ -47,16 +46,16 @@ class TaskBuilder extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () async {
+                  Task new_task = Task(todo_id: todo.id, timer: DateTime.now());
                   var result = await showModalBottomSheet(
                     context: context,
                     backgroundColor: Colors.transparent,
                     isScrollControlled: true,
                     builder: (context) {
-                      return TaskModal('', modalStatus.add);
+                      return TaskModal(new_task, modalStatus.add);
                     },
                   );
                   if (result == null) return;
-                  // await task_provider.create();
                 },
                 padding: EdgeInsets.only(right: 10),
                 icon: Icon(

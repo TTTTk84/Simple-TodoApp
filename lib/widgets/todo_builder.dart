@@ -119,13 +119,10 @@ class TodoBuilder extends StatelessWidget {
                                     backgroundColor: Colors.transparent,
                                     isScrollControlled: true,
                                     builder: (context) {
-                                      return TodoModal(
-                                          _todo.description, modalStatus.edit);
+                                      return TodoModal(_todo, modalStatus.edit);
                                     },
                                   );
                                   if (result == null) return;
-                                  _todo.description = result;
-                                  await todo_provider.update(_todo);
                                   break;
                                 case TodoCardSettings.delete:
                                   await todo_provider.delete(_todo);

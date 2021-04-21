@@ -1,26 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app/db/todo_repository.dart';
+import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/util.dart';
 
-class TodoModal extends StatefulWidget {
-  String text;
+class TodoModal extends StatelessWidget {
+  Todo _todo;
   modalStatus status;
-  TodoModal(this.text, this.status);
 
-  @override
-  _TodoModalState createState() => _TodoModalState();
-}
+  TodoModal(this._todo, this.status);
 
-class _TodoModalState extends State<TodoModal> {
   final _formKey = GlobalKey<FormState>();
-
-  void _updateText(String t) {
-    setState(() {
-      widget.text = t;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    var _textController = TextEditingController(text: _todo.description);
+    void _onPress() async {
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+        _todo.description = _textController.text;
+        if (status == modalStatus.add) {
+          await Provider.of<TodoRepository>(context, listen: false)
+              .create(_todo.description);
+        } else {
+          await Provider.of<TodoRepository>(context, listen: false)
+              .update(_todo);
+        }
+        Navigator.of(context).pop<String>('${_textController.text}');
+      }
+    }
+
     return Container(
       height: MediaQuery.of(context).size.height - 80,
       padding:
@@ -88,9 +97,7 @@ class _TodoModalState extends State<TodoModal> {
                       children: <Widget>[
                         SizedBox(height: 10),
                         Text(
-                          widget.status == modalStatus.add
-                              ? 'カテゴリを追加'
-                              : 'カテゴリを編集',
+                          status == modalStatus.add ? 'カテゴリを追加' : 'カテゴリを編集',
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -100,7 +107,7 @@ class _TodoModalState extends State<TodoModal> {
                         Container(
                           width: MediaQuery.of(context).size.width / 1.2,
                           child: TextFormField(
-                            initialValue: widget.text,
+                            controller: _textController,
                             autofocus: false,
                             decoration: InputDecoration(
                               hintText: "筋トレ",
@@ -115,9 +122,6 @@ class _TodoModalState extends State<TodoModal> {
                               if (v.isEmpty || v == null)
                                 return 'テキストを入力してください';
                               return null;
-                            },
-                            onSaved: (v) {
-                              _updateText(v);
                             },
                           ),
                         ),
@@ -143,16 +147,10 @@ class _TodoModalState extends State<TodoModal> {
                           ),
                           child: ElevatedButton(
                             onPressed: () {
-                              if (_formKey.currentState.validate()) {
-                                _formKey.currentState.save();
-                                Navigator.of(context)
-                                    .pop<String>('${widget.text}');
-                              }
+                              _onPress();
                             },
                             child: Text(
-                              widget.status == modalStatus.add
-                                  ? 'カテゴリを追加'
-                                  : 'カテゴリを編集',
+                              status == modalStatus.add ? 'カテゴリを追加' : 'カテゴリを編集',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w800,

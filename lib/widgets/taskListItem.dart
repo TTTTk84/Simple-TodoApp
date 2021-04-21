@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/models/task.dart';
+import 'package:todo_app/util.dart';
+import 'package:todo_app/widgets/taskModal.dart';
 
 Widget listItem(Task _task, BuildContext context) {
   void _checkItem() async {
@@ -45,9 +47,22 @@ Widget listItem(Task _task, BuildContext context) {
               flex: 2,
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Text(
-                  '2020-01-01',
-                  style: TextStyle(color: Colors.grey),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.settings,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () async {
+                    var result = await showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      builder: (context) {
+                        return TaskModal(_task, modalStatus.edit);
+                      },
+                    );
+                    if (result == null) return;
+                  },
                 ),
               ),
             ),
