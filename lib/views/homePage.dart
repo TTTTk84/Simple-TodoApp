@@ -7,14 +7,9 @@ import 'package:todo_app/widgets/appBar.dart';
 import 'package:todo_app/widgets/todo_builder.dart';
 
 class HomePage extends StatelessWidget {
-//   @override
-//   _HomePageState createState() => _HomePageState();
-// }
-
-// class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var todo_provider = Provider.of<TodoRepository>(context, listen: false);
-    var todos = FutureBuilder(
+    var todo_builder = FutureBuilder(
       future: todo_provider.getAll(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
@@ -41,7 +36,7 @@ class HomePage extends StatelessWidget {
             Spacer(flex: 3),
             Expanded(
               flex: 5,
-              child: todos,
+              child: todo_builder,
             ),
             Spacer(flex: 2),
           ],

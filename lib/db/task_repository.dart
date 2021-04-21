@@ -1,19 +1,24 @@
+import 'package:flutter/material.dart';
 import 'package:sqflite/sql.dart';
 import 'package:todo_app/db/db_provider.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/util.dart';
 
-class TaskRepository {
+class TaskRepository with ChangeNotifier {
   static String table = 'task';
   static DBProvider instance = DBProvider.instance;
+  List<Task> tasklist = [];
 
-  static Future<Task> create(Task task) async {
+  List<Task> get task_items => tasklist;
+
+  Future<Task> create(Task task) async {
     DateTime now = DateTime.now();
     final Map<String, dynamic> row = {
       'description': task.description,
-      'is_checked': task.is_checked,
-      'is_enabled': task.is_enabled,
-      'timer': task.timer,
+      'is_checked': UtilTool.changeBooltoInt(task.is_checked),
+      'is_enabled': UtilTool.changeBooltoInt(task.is_enabled),
+      'timer': task.timer.toString(),
       'todo_id': task.todo_id,
       'created_at': now.toString(),
       'updated_at': now.toString(),
@@ -25,29 +30,25 @@ class TaskRepository {
       row,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-
-    return Task(
-      id: id,
-      description: row['description'],
-      is_checked: row['is_checked'],
-      is_enabled: row['is_enabled'],
-      timer: row['timer'],
-      todo_id: row['todo_id'],
-      createdAt: row['createdAt'],
-      updatedAt: row['updatedAt'],
-    );
+    Task _task = Task.fromMap(row);
+    this.tasklist.add(_task);
+    notifyListeners();
+    return _task;
   }
 
-  static Future<List<Task>> getAll() async {
+  Future<List<Task>> getTasks(int todo_id) async {
     final db = await instance.database;
     final rows =
-        await db.rawQuery('SELECT * FROM $table ORDER BY updated_at DESC');
+        await db.rawQuery('SELECT * FROM $table WHERE todo_id = ?', [todo_id]);
     if (rows.isEmpty) return null;
+    final tasklist = rows.map((e) => Task.fromMap(e)).toList();
+    this.tasklist = tasklist;
 
-    return rows.map((e) => Task.fromMap(e)).toList();
+    notifyListeners();
+    return tasklist;
   }
 
-  static Future<Task> single(int id) async {
+  Future<Task> single(int id) async {
     final db = await instance.database;
     final rows = await db.rawQuery('SELECT * FROM $table WHERE id = ?', [id]);
     if (rows.isEmpty) return null;
@@ -55,26 +56,57 @@ class TaskRepository {
     return Task.fromMap(rows.first);
   }
 
-  static Future<int> update({int id, String text}) async {
-    String now = DateTime.now().toString();
+  Future<void> changeCheck(Task task) async {
     final row = {
-      'id': id,
-      'description': text,
-      'updated_at': now,
+      'is_checked': !task.is_checked,
     };
     final db = await instance.database;
-    return db.update(
+    await db.update(
       table,
       row,
       where: 'id = ?',
-      whereArgs: [id],
+      whereArgs: [task.id],
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    var _tasklist = this.tasklist;
+    _tasklist.asMap().forEach((i, v) {
+      if (v.id == task.id) {
+        this.tasklist[i].is_checked = !task.is_checked;
+      }
+    });
+    notifyListeners();
   }
 
-  static Future<int> delete(int id) async {
+  Future<void> delete(Task task) async {
     final db = await instance.database;
-    return db.delete(table, where: 'id = ?', whereArgs: [id]);
+    await db.delete(table, where: 'id = ?', whereArgs: [task.id]);
+    this.tasklist.remove(task);
+    notifyListeners();
+  }
+
+  Future<void> update(Task task) async {
+    String now = DateTime.now().toString();
+    final row = {
+      'id': task.id,
+      'description': task.description,
+      'updated_at': now,
+    };
+    final db = await instance.database;
+    await db.update(
+      table,
+      row,
+      where: 'id = ?',
+      whereArgs: [task.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    var _tasklist = this.tasklist;
+    _tasklist.asMap().forEach((i, v) {
+      if (v.id == task.id) {
+        this.tasklist[i] = task;
+      }
+    });
+    notifyListeners();
   }
 
   static void deleteTasks(Todo todo) async {

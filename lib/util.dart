@@ -28,3 +28,31 @@ class CustomColors {
   static const Color TextWhite = Color.fromRGBO(243, 243, 243, 1);
   static const Color HeaderCircle = Color.fromRGBO(255, 255, 255, 0.17);
 }
+
+class UtilTool {
+  static int changeBooltoInt(bool value) {
+    switch (value) {
+      case true:
+        return 1;
+        break;
+      case false:
+        return 0;
+        break;
+      default:
+        return 0;
+    }
+  }
+
+  static bool changeInttoBool(int value) {
+    switch (value) {
+      case 1:
+        return true;
+        break;
+      case 0:
+        return false;
+        break;
+      default:
+        return false;
+    }
+  }
+}

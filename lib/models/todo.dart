@@ -9,9 +9,9 @@ class Todo {
   });
 
   final int id;
-  final String description;
+  String description;
   final DateTime createdAt;
-  final DateTime updatedAt;
+  DateTime updatedAt;
 
   factory Todo.fromMap(Map<String, dynamic> json) => Todo(
         id: json['id'],
