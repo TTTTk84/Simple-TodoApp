@@ -1,29 +1,55 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/util.dart';
+import 'package:todo_app/widgets/selectDateTime.dart';
 
-class TaskModal extends StatelessWidget {
+class TaskModal extends StatefulWidget {
   Task _task;
-  modalStatus status;
-  TaskModal(this._task, this.status);
-
+  modalStatus _status;
+  String _timeString;
+  DateTime _time;
+  bool _is_enabled;
   final _formKey = GlobalKey<FormState>();
+
+  TaskModal(this._task, this._status);
+  @override
+  _TaskModalState createState() => _TaskModalState();
+}
+
+class _TaskModalState extends State<TaskModal> {
+  @override
+  void initState() {
+    super.initState();
+    widget._is_enabled = widget._task.is_enabled;
+    if (widget._status == modalStatus.add) {
+      widget._time = DateTime.now();
+      widget._timeString = selectDateTime.dateTimeParse(DateTime.now());
+    } else {
+      print('_task.timer: ${widget._task.timer}');
+      widget._time = widget._task.timer;
+      widget._timeString = selectDateTime.dateTimeParse(widget._task.timer);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    var _textController = TextEditingController(text: _task.description);
+    var _textController = TextEditingController(text: widget._task.description);
+
     void _onPress() async {
-      if (_formKey.currentState.validate()) {
-        _formKey.currentState.save();
-        _task.description = _textController.text;
-        if (status == modalStatus.add) {
+      if (widget._formKey.currentState.validate()) {
+        widget._formKey.currentState.save();
+        widget._task.description = _textController.text;
+        widget._task.timer = widget._time;
+        widget._task.is_enabled = widget._is_enabled;
+        if (widget._status == modalStatus.add) {
           await Provider.of<TaskRepository>(context, listen: false)
-              .create(_task);
+              .create(widget._task);
         } else {
           await Provider.of<TaskRepository>(context, listen: false)
-              .update(_task);
+              .update(widget._task);
         }
         Navigator.of(context).pop<String>('${_textController.text}');
       }
@@ -53,7 +79,7 @@ class TaskModal extends StatelessWidget {
             top: MediaQuery.of(context).size.height / 2 - 340,
             child: Container(
               child: Form(
-                key: _formKey,
+                key: widget._formKey,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -96,7 +122,9 @@ class TaskModal extends StatelessWidget {
                       children: <Widget>[
                         SizedBox(height: 10),
                         Text(
-                          status == modalStatus.add ? 'タスクを追加' : 'タスクを編集',
+                          widget._status == modalStatus.add
+                              ? 'タスクを追加'
+                              : 'タスクを編集',
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -127,20 +155,37 @@ class TaskModal extends StatelessWidget {
                         SizedBox(height: 20),
                         Container(
                           width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.only(left: 38),
+                          padding: EdgeInsets.fromLTRB(38, 0, 40, 0),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Icon(
-                                Icons.calendar_today_sharp,
-                                size: 40,
-                                color: Colors.orangeAccent,
+                              CupertinoSwitch(
+                                value: widget._is_enabled,
+                                onChanged: (v) {
+                                  setState(
+                                    () {
+                                      widget._is_enabled = !widget._is_enabled;
+                                    },
+                                  );
+                                },
                               ),
-                              SizedBox(width: 50),
-                              Text(
-                                '04-31-2021',
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 20),
-                              )
+                              TextButton(
+                                onPressed: () async {
+                                  widget._time = await selectDateTime(context)
+                                      .selectDate();
+                                  setState(() {
+                                    widget._timeString = selectDateTime
+                                        .dateTimeParse(widget._time);
+                                  });
+                                },
+                                child: Text(
+                                  widget._timeString,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -169,7 +214,9 @@ class TaskModal extends StatelessWidget {
                               _onPress();
                             },
                             child: Text(
-                              status == modalStatus.add ? 'タスクを追加' : 'タスクを編集',
+                              widget._status == modalStatus.add
+                                  ? 'タスクを追加'
+                                  : 'タスクを編集',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w800,
