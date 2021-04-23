@@ -1,113 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/util.dart';
+import 'package:todo_app/widgets/reminderTile.dart';
+import 'package:todo_app/widgets/taskListItem.dart';
 
 class reminderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Widget TaskCard() {
-      return Container(
-        margin: EdgeInsets.fromLTRB(20, 0, 20, 25),
-        padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
-        decoration: BoxDecoration(
-          color: CustomColors.HeaderGreyLight,
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'レポート締め切り',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                SizedBox(height: 3),
-                Text(
-                  '13.00 PM',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w300,
-                  ),
-                )
-              ],
-            ),
-            Transform.rotate(
-              angle: 0.35,
-              child: Icon(
-                Icons.notifications_on,
-                color: Colors.white,
-                size: 45,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+    reminder_builder() => FutureBuilder(
+          future: Provider.of<TaskRepository>(context, listen: false)
+              .getReminderTask(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+                return Text('loading...');
+              default:
+                if (snapshot.hasError)
+                  return Text('Error: ${snapshot.error}');
+                else
+                  return Consumer<TaskRepository>(
+                    builder: (cctx, task, child) =>
+                        ReminderCardBuilder(task.enabled_task_items),
+                  );
+            }
+          },
+        );
 
-    return Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            gradient: LinearGradient(
-              begin: FractionalOffset.topLeft,
-              end: FractionalOffset.bottomRight,
-              colors: [
-                CustomColors.HeaderBlueDark,
-                CustomColors.HeaderBlueLight,
-              ],
-              stops: const [
-                0.0,
-                1.0,
-              ],
-            ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.grey,
           ),
         ),
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            leading: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.grey,
+      ),
+      body: Column(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.only(left: 40),
+            child: Text(
+              'リマインダー',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black87,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
-          body: Column(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(left: 40),
-                child: Text(
-                  'リマインダー',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              SizedBox(height: 25),
-              TaskCard(),
-              TaskCard(),
-              TaskCard(),
-              TaskCard(),
-            ],
+          SizedBox(height: 40),
+          Expanded(
+            child: reminder_builder(),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
