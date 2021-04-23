@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/util.dart';
+import 'package:todo_app/widgets/notification.dart';
 import 'package:todo_app/widgets/selectDateTime.dart';
 
 class TaskModal extends StatefulWidget {
@@ -44,6 +45,8 @@ class _TaskModalState extends State<TaskModal> {
         widget._task.description = _textController.text;
         widget._task.timer = widget._time;
         widget._task.is_enabled = widget._is_enabled;
+
+        notificationPlugin.updateNotification(widget._task);
         if (widget._status == modalStatus.add) {
           await Provider.of<TaskRepository>(context, listen: false)
               .create(widget._task);
@@ -171,11 +174,12 @@ class _TaskModalState extends State<TaskModal> {
                               ),
                               TextButton(
                                 onPressed: () async {
-                                  widget._time = await selectDateTime(context)
+                                  var temp = await selectDateTime(context)
                                       .selectDate();
+                                  if (temp == null) return;
                                   setState(() {
-                                    widget._timeString = selectDateTime
-                                        .dateTimeParse(widget._time);
+                                    widget._timeString =
+                                        selectDateTime.dateTimeParse(temp);
                                   });
                                 },
                                 child: Text(

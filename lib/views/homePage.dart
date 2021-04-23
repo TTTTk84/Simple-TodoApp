@@ -4,10 +4,15 @@ import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/util.dart';
 import 'package:todo_app/widgets/appBar.dart';
+import 'package:todo_app/widgets/notification.dart';
 import 'package:todo_app/widgets/todo_builder.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class HomePage extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
+    notificationPlugin.init();
+
     var todo_provider = Provider.of<TodoRepository>(context, listen: false);
     var todo_builder = FutureBuilder(
       future: todo_provider.getAll(),

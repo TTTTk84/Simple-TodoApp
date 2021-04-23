@@ -18,8 +18,8 @@ class Task {
   bool is_checked;
   bool is_enabled;
   DateTime timer;
-  final int todo_id;
-  final DateTime createdAt;
+  int todo_id;
+  DateTime createdAt;
   DateTime updatedAt;
 
   factory Task.fromMap(Map<String, dynamic> json) => Task(

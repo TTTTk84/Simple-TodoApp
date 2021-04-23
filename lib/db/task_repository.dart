@@ -85,11 +85,15 @@ class TaskRepository with ChangeNotifier {
   }
 
   Future<void> update(Task task) async {
-    String now = DateTime.now().toString();
-    final row = {
-      'id': task.id,
+    DateTime now = DateTime.now();
+    final Map<String, dynamic> row = {
       'description': task.description,
-      'updated_at': now,
+      'is_checked': UtilTool.changeBooltoInt(task.is_checked),
+      'is_enabled': UtilTool.changeBooltoInt(task.is_enabled),
+      'timer': task.timer.toString(),
+      'todo_id': task.todo_id,
+      'created_at': now.toString(),
+      'updated_at': now.toString(),
     };
     final db = await instance.database;
     await db.update(
