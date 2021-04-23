@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/db/todo_repository.dart';
+import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/selectDateTime.dart';
 
 import 'package:todo_app/util.dart';
 import 'package:todo_app/views/reminderPage.dart';
@@ -14,7 +17,11 @@ class TodoAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    var todo_repository = Provider.of<TodoRepository>(context);
+    TodoRepository todo_repository = Provider.of<TodoRepository>(context);
+    TaskRepository task_repository =
+        Provider.of<TaskRepository>(context, listen: false);
+    Task _task = task_repository.enabled_task_items.first;
+
     return GradientAppBar(
       title: Container(
         width: MediaQuery.of(context).size.width,
@@ -93,7 +100,7 @@ class TodoAppBar extends StatelessWidget with PreferredSizeWidget {
                     ),
                     SizedBox(height: 3),
                     Text(
-                      'レポート締め切り',
+                      _task.description,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
@@ -102,7 +109,7 @@ class TodoAppBar extends StatelessWidget with PreferredSizeWidget {
                     ),
                     SizedBox(height: 3),
                     Text(
-                      '13.00 PM',
+                      selectDateTime.dateTimeParse(_task.timer),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 13,

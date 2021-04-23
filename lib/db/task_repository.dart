@@ -9,8 +9,10 @@ class TaskRepository with ChangeNotifier {
   static String table = 'task';
   static DBProvider instance = DBProvider.instance;
   List<Task> tasklist = [];
+  List<Task> enabled_task = [];
 
   List<Task> get task_items => tasklist;
+  List<Task> get enabled_task_items => enabled_task;
 
   Future<Task> create(Task task) async {
     DateTime now = DateTime.now();
@@ -113,8 +115,20 @@ class TaskRepository with ChangeNotifier {
     notifyListeners();
   }
 
-  static void deleteTasks(Todo todo) async {
+  Future<void> deleteTasks(Todo todo) async {
     final db = await instance.database;
     await db.delete(table, where: 'todo_id = ?', whereArgs: [todo.id]);
+  }
+
+  Future<List<Task>> getReminderTask() async {
+    final db = await instance.database;
+    final rows = await db.rawQuery(
+        'SELECT * FROM $table WHERE is_enabled = ? AND is_checked = ?', [1, 0]);
+    if (rows.isEmpty) return null;
+    final tasklist = rows.map((e) => Task.fromMap(e)).toList();
+    this.enabled_task = tasklist;
+
+    notifyListeners();
+    return tasklist;
   }
 }

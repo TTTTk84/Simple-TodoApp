@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/util.dart';
-import 'package:todo_app/widgets/notification.dart';
-import 'package:todo_app/widgets/selectDateTime.dart';
+import 'package:todo_app/notification.dart';
+import 'package:todo_app/selectDateTime.dart';
 
 class TaskModal extends StatefulWidget {
   Task _task;
@@ -29,7 +29,6 @@ class _TaskModalState extends State<TaskModal> {
       widget._time = DateTime.now();
       widget._timeString = selectDateTime.dateTimeParse(DateTime.now());
     } else {
-      print('_task.timer: ${widget._task.timer}');
       widget._time = widget._task.timer;
       widget._timeString = selectDateTime.dateTimeParse(widget._task.timer);
     }
