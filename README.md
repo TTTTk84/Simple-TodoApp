@@ -15,7 +15,7 @@ Flutter 2.0.3 • channel stable
 
 ## デモ
 
-<table>
+<table style='border: none'>
     <tr>
       <td><img src='readme_images/home.png' width='80%' height='auto'></td>
       <td><img src='readme_images/reminder.png' width='80%' height='auto'></td>
