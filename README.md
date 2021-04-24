@@ -17,15 +17,15 @@ Flutter 2.0.3 • channel stable
 
 <table>
     <tr>
-      <td><img src='readme_images/home.png' width='330px' height='665px'></td>
-      <td><img src='readme_images/reminder.png' width='330px' height='665px'></td>
+      <td><img src='readme_images/home.png'></td>
+      <td><img src='readme_images/reminder.png'></td>
     </tr>
     <tr>
-      <td><img src='readme_images/task.png' width='330px' height='665px'></td>
-      <td><img src='readme_images/time.png' width='330px' height='665px'></td>
+      <td><img src='readme_images/task.png'></td>
+      <td><img src='readme_images/time.png'></td>
     </tr>
     <tr>
-      <td><img src='readme_images/add_todo.png' width='330px' height='665px'></td>
+      <td><img src='readme_images/add_todo.png'></td>
     </tr>
   </table>
 ## License
