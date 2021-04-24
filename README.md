@@ -28,6 +28,7 @@ Flutter 2.0.3 • channel stable
       <td><img src='readme_images/add_todo.png'></td>
     </tr>
   </table>
+
 ## License
 
 MIT
