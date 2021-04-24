@@ -28,15 +28,15 @@ class Query {
 
   final String insert_todo_query = '''
   INSERT INTO todo(description,created_at,updated_at)
-    values('プログラミング','$now','$now'),
+    values('学校','$now','$now'),
           ('筋トレ','$now','$now');
   ''';
 
   final insert_task_query = '''
   INSERT INTO task(description,is_checked,is_enabled,timer,todo_id,created_at,updated_at)
-    values('html', 0, 0, '$now', 1, '$now', '$now'),
-          ('css', 0, 0, '$now', 1, '$now', '$now'),
-          ('js', 0, 0, '$now', 1, '$now', '$now'),
+    values('国語プリント', 0, 0, '$now', 1, '$now', '$now'),
+          ('数学プリント', 0, 0, '$now', 1, '$now', '$now'),
+          ('英語プリント', 0, 0, '$now', 1, '$now', '$now'),
           ('腹筋', 0, 0, '$now', 2, '$now', '$now'),
           ('背筋', 0, 0, '$now', 2, '$now', '$now');
   ''';
