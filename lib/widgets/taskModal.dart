@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/models/task.dart';
-import 'package:todo_app/util.dart';
-import 'package:todo_app/notification.dart';
-import 'package:todo_app/selectDateTime.dart';
+import 'package:todo_app/utils/util.dart';
+import 'package:todo_app/utils/notification.dart';
+import 'package:todo_app/utils/selectDateTime.dart';
 
 class TaskModal extends StatefulWidget {
   Task _task;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/task.dart';
-import 'package:todo_app/selectDateTime.dart';
-import 'package:todo_app/util.dart';
+import 'package:todo_app/utils/selectDateTime.dart';
+import 'package:todo_app/utils/util.dart';
 
 class ReminderCardBuilder extends StatelessWidget {
   List<Task> tasklist;

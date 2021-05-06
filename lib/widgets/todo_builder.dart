@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:todo_app/util.dart';
+import 'package:todo_app/utils/util.dart';
 import 'package:todo_app/views/task_builderPage.dart';
 import 'package:todo_app/widgets/todoModal.dart';
 

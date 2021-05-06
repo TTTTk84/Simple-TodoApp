@@ -5,9 +5,9 @@ import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:todo_app/selectDateTime.dart';
+import 'package:todo_app/utils/selectDateTime.dart';
 
-import 'package:todo_app/util.dart';
+import 'package:todo_app/utils/util.dart';
 import 'package:todo_app/views/reminderPage.dart';
 import 'package:todo_app/widgets/todoModal.dart';
 

@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:todo_app/util.dart';
+import 'package:todo_app/utils/util.dart';
 import 'package:todo_app/widgets/appBar.dart';
-import 'package:todo_app/notification.dart';
+import 'package:todo_app/utils/notification.dart';
 import 'package:todo_app/widgets/todo_builder.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:todo_app/util.dart';
+import 'package:todo_app/utils/util.dart';
 
 class TodoModal extends StatelessWidget {
   Todo _todo;
