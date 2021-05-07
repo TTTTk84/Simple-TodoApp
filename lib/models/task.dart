@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/util.dart';
+import 'package:todo_app/utils/util.dart';
 
 class Task {
   Task({

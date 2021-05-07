@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/db/task_repository.dart';
-import 'package:todo_app/util.dart';
+import 'package:todo_app/utils/util.dart';
 import 'package:todo_app/widgets/reminderTile.dart';
 import 'package:todo_app/widgets/taskListItem.dart';
 
-class reminderPage extends StatelessWidget {
+class ReminderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     reminder_builder() => FutureBuilder(

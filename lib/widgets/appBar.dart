@@ -5,9 +5,10 @@ import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:todo_app/selectDateTime.dart';
+import 'package:todo_app/ui/appBarUI.dart';
+import 'package:todo_app/utils/selectDateTime.dart';
 
-import 'package:todo_app/util.dart';
+import 'package:todo_app/utils/util.dart';
 import 'package:todo_app/views/reminderPage.dart';
 import 'package:todo_app/widgets/todoModal.dart';
 
@@ -20,7 +21,7 @@ class TodoAppBar extends StatelessWidget with PreferredSizeWidget {
     TodoRepository todo_repository = Provider.of<TodoRepository>(context);
     TaskRepository task_repository =
         Provider.of<TaskRepository>(context, listen: false);
-    Task _task = task_repository.enabled_task_items.first;
+    List<Task> _tasks = task_repository.enabled_task_items;
 
     return GradientAppBar(
       title: Container(
@@ -65,72 +66,12 @@ class TodoAppBar extends StatelessWidget with PreferredSizeWidget {
         end: Alignment.bottomRight,
         colors: [CustomColors.HeaderBlueDark, CustomColors.HeaderBlueLight],
       ),
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(10),
-        child: InkWell(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                fullscreenDialog: true,
-                builder: (BuildContext context) => reminderPage(),
-              ),
-            );
-          },
-          child: Container(
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
-            padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-            decoration: BoxDecoration(
-              color: CustomColors.HeaderGreyLight,
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '期限の近いタスク',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: 3),
-                    Text(
-                      _task.description,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                    SizedBox(height: 3),
-                    Text(
-                      selectDateTime.dateTimeParse(_task.timer),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    )
-                  ],
-                ),
-                Transform.rotate(
-                  angle: 0.35,
-                  child: Icon(
-                    Icons.notifications_on,
-                    color: Colors.white,
-                    size: 45,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      bottom: _tasks.isEmpty
+          ? appBarBottom(
+              context,
+              Task(description: "予定なし", timer: DateTime.now()),
+            )
+          : appBarBottom(context, _tasks.first),
     );
   }
 }

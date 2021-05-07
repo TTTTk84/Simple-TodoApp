@@ -3,7 +3,7 @@ import 'package:sqflite/sql.dart';
 import 'package:todo_app/db/db_provider.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:todo_app/util.dart';
+import 'package:todo_app/utils/util.dart';
 
 class TaskRepository with ChangeNotifier {
   static String table = 'task';
