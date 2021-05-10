@@ -20,6 +20,7 @@ class TodoRepository with ChangeNotifier {
     final id = await db.insert(table, row);
     if (id == 0) return null;
     Todo todo = Todo.fromMap(row);
+    todo.id = id;
     this.todolist.insert(0, todo);
     notifyListeners();
     return todo;

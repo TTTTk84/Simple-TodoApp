@@ -13,7 +13,7 @@ class Task {
     @required this.updatedAt,
   });
 
-  final int id;
+  int id;
   String description;
   bool is_checked;
   bool is_enabled;

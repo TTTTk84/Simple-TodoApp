@@ -5,8 +5,11 @@ import 'package:todo_app/utils/util.dart';
 import 'package:todo_app/views/reminderPage.dart';
 
 Widget appBarBottom(BuildContext context, Task _task) {
+  double deviceW = MediaQuery.of(context).size.width;
+  double deviceH = MediaQuery.of(context).size.height;
+
   return PreferredSize(
-    preferredSize: Size.fromHeight(10),
+    preferredSize: Size.fromHeight(deviceW * 0.3),
     child: InkWell(
       onTap: () {
         Navigator.of(context).push(
@@ -17,8 +20,9 @@ Widget appBarBottom(BuildContext context, Task _task) {
         );
       },
       child: Container(
-        margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
-        padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+        margin: EdgeInsets.fromLTRB(
+            deviceW * 0.03, 0, deviceW * 0.03, deviceW * 0.04),
+        padding: EdgeInsets.all(deviceW * 0.03),
         decoration: BoxDecoration(
           color: CustomColors.HeaderGreyLight,
           borderRadius: BorderRadius.circular(5.0),

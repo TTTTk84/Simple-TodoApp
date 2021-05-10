@@ -36,7 +36,11 @@ class HomePage extends StatelessWidget {
 
     return Container(
       child: Scaffold(
-        appBar: TodoAppBar(),
+        appBar: PreferredSize(
+          preferredSize:
+              Size.fromHeight(MediaQuery.of(context).size.height * 0.24),
+          child: TodoAppBar(),
+        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

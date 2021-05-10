@@ -28,7 +28,9 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.pinkAccent,
           brightness: Brightness.light,
         ),
-        home: HomePage(),
+        home: SafeArea(
+          child: HomePage(),
+        ),
       ),
     );
   }

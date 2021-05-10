@@ -33,6 +33,7 @@ class TaskRepository with ChangeNotifier {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
     Task _task = Task.fromMap(row);
+    _task.id = id;
     this.tasklist.add(_task);
     notifyListeners();
     return _task;
