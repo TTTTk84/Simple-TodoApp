@@ -21,39 +21,34 @@ class TodoAppBar extends StatelessWidget {
     List<Task> _tasks = task_repository.enabled_task_items;
 
     return GradientAppBar(
-      title: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(height: deviceW * 0.02),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                'TODO LIST',
-                style: TextStyle(
-                    fontSize: deviceW * 0.055, fontWeight: FontWeight.w400),
+      title: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'TODO LIST',
+              style: TextStyle(
+                  fontSize: deviceW * 0.055, fontWeight: FontWeight.w400),
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.add,
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.add,
-                ),
-                onPressed: () async {
-                  Todo new_todo = Todo();
-                  var result = await showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    isScrollControlled: true,
-                    builder: (context) {
-                      return TodoModal(new_todo, modalStatus.add);
-                    },
-                  );
-                  if (result == null) return;
-                },
-              ),
-            ],
-          ),
-        ],
+              onPressed: () async {
+                Todo new_todo = Todo();
+                var result = await showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                  builder: (context) {
+                    return TodoModal(new_todo, modalStatus.add);
+                  },
+                );
+                if (result == null) return;
+              },
+            ),
+          ],
+        ),
       ),
       elevation: 0,
       gradient: LinearGradient(

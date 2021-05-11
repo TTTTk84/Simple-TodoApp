@@ -38,25 +38,25 @@ Widget appBarBottom(BuildContext context, Task _task) {
                   '期限の近いタスク',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 17,
+                    fontSize: deviceW * 0.045,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 3),
+                SizedBox(height: deviceW * 0.01),
                 Text(
                   _task.description,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 15,
+                    fontSize: deviceW * 0.04,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
-                SizedBox(height: 3),
+                SizedBox(height: deviceW * 0.008),
                 Text(
                   selectDateTime.dateTimeParse(_task.timer),
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 13,
+                    fontSize: deviceW * 0.038,
                     fontWeight: FontWeight.w300,
                   ),
                 )
@@ -67,7 +67,7 @@ Widget appBarBottom(BuildContext context, Task _task) {
               child: Icon(
                 Icons.notifications_on,
                 color: Colors.white,
-                size: 45,
+                size: deviceW * 0.17,
               ),
             ),
           ],

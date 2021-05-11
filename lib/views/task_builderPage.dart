@@ -15,6 +15,8 @@ class TaskBuilder extends StatelessWidget {
   TaskBuilder(this.todo, this.tasks);
 
   Widget build(BuildContext context) {
+    double deviceW = MediaQuery.of(context).size.width;
+    double deviceH = MediaQuery.of(context).size.height;
     var task_provider = Provider.of<TaskRepository>(context);
 
     return Stack(
@@ -69,21 +71,22 @@ class TaskBuilder extends StatelessWidget {
           ),
           body: Column(
             children: <Widget>[
-              SizedBox(height: 80),
+              SizedBox(height: deviceW * 0.2),
               Container(
                 width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(left: 40),
+                padding: EdgeInsets.only(left: deviceW * 0.11),
                 child: Hero(
                   tag: todo.id.toString() + '_description',
                   child: Text(
                     '${todo.description}',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                        fontSize: deviceW * 0.07, fontWeight: FontWeight.w700),
                   ),
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: deviceW * 0.1),
               Container(
-                height: MediaQuery.of(context).size.height / 1.5,
+                height: deviceH * 0.5,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                   itemCount: tasks.length,
