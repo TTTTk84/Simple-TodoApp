@@ -5,8 +5,8 @@ import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/utils/util.dart';
 
 class TodoModal extends StatelessWidget {
-  Todo _todo;
-  modalStatus status;
+  final Todo _todo;
+  final modalStatus status;
 
   TodoModal(this._todo, this.status);
 
@@ -15,15 +15,15 @@ class TodoModal extends StatelessWidget {
     double deviceW = MediaQuery.of(context).size.width;
     double deviceH = MediaQuery.of(context).size.height;
     var _textController = TextEditingController(text: _todo.description);
+    var _provider = Provider.of<TodoRepository>(context, listen: false);
 
     void _onPress() async {
       if (_textController.text.isEmpty || _textController.text == null) return;
       _todo.description = _textController.text;
       if (status == modalStatus.add) {
-        await Provider.of<TodoRepository>(context, listen: false)
-            .create(_todo.description);
+        await _provider.create(_todo.description);
       } else {
-        await Provider.of<TodoRepository>(context, listen: false).update(_todo);
+        await _provider.update(_todo);
       }
       Navigator.of(context).pop<String>('${_textController.text}');
     }

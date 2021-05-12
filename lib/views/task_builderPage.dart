@@ -9,15 +9,23 @@ import 'package:todo_app/widgets/taskListItem.dart';
 import 'package:todo_app/widgets/taskModal.dart';
 
 class TaskBuilder extends StatelessWidget {
-  Todo todo;
-  List<Task> tasks;
+  final Todo todo;
+  final List<Task> tasks;
 
   TaskBuilder(this.todo, this.tasks);
 
+  @override
   Widget build(BuildContext context) {
     double deviceW = MediaQuery.of(context).size.width;
     double deviceH = MediaQuery.of(context).size.height;
-    var task_provider = Provider.of<TaskRepository>(context);
+    var _taskProvider = Provider.of<TaskRepository>(context);
+    Task newTask = Task(
+      description: "",
+      is_enabled: false,
+      is_checked: false,
+      todo_id: todo.id,
+      timer: DateTime.now(),
+    );
 
     return Stack(
       children: <Widget>[
@@ -38,6 +46,7 @@ class TaskBuilder extends StatelessWidget {
           appBar: AppBar(
             leading: IconButton(
               onPressed: () {
+                _taskProvider.refresh();
                 Navigator.of(context).pop();
               },
               icon: Icon(
@@ -48,13 +57,12 @@ class TaskBuilder extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () async {
-                  Task new_task = Task(todo_id: todo.id, timer: DateTime.now());
                   var result = await showModalBottomSheet(
                     context: context,
                     backgroundColor: Colors.transparent,
                     isScrollControlled: true,
                     builder: (context) {
-                      return TaskModal(new_task, modalStatus.add);
+                      return TaskModal(newTask, modalStatus.add);
                     },
                   );
                   if (result == null) return;

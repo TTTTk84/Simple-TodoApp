@@ -15,10 +15,9 @@ class TodoAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     double deviceW = MediaQuery.of(context).size.width;
     double deviceH = MediaQuery.of(context).size.height;
-    TodoRepository todo_repository = Provider.of<TodoRepository>(context);
-    TaskRepository task_repository =
-        Provider.of<TaskRepository>(context, listen: false);
-    List<Task> _tasks = task_repository.enabled_task_items;
+    var _todoProvider = Provider.of<TodoRepository>(context);
+    var _taskProvider = Provider.of<TaskRepository>(context);
+    List<Task> _tasks = _taskProvider.enabledTaskItems;
 
     return GradientAppBar(
       title: Center(
@@ -35,13 +34,13 @@ class TodoAppBar extends StatelessWidget {
                 Icons.add,
               ),
               onPressed: () async {
-                Todo new_todo = Todo();
+                Todo _newTodo = Todo();
                 var result = await showModalBottomSheet(
                   context: context,
                   backgroundColor: Colors.transparent,
                   isScrollControlled: true,
                   builder: (context) {
-                    return TodoModal(new_todo, modalStatus.add);
+                    return TodoModal(_newTodo, modalStatus.add);
                   },
                 );
                 if (result == null) return;

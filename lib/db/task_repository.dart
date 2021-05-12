@@ -9,10 +9,12 @@ class TaskRepository with ChangeNotifier {
   static String table = 'task';
   static DBProvider instance = DBProvider.instance;
   List<Task> tasklist = [];
-  List<Task> enabled_task = [];
+  List<Task> enabledTask = [];
+  Map<String, dynamic> editingTask = {};
 
-  List<Task> get task_items => tasklist;
-  List<Task> get enabled_task_items => enabled_task;
+  List<Task> get taskItems => tasklist;
+  List<Task> get enabledTaskItems => enabledTask;
+  Map<String, dynamic> get getEditingTask => editingTask;
 
   Future<Task> create(Task task) async {
     DateTime now = DateTime.now();
@@ -39,24 +41,16 @@ class TaskRepository with ChangeNotifier {
     return _task;
   }
 
-  Future<List<Task>> getTasks(int todo_id) async {
+  Future<List<Task>> getTasks(int todoId) async {
     final db = await instance.database;
     final rows =
-        await db.rawQuery('SELECT * FROM $table WHERE todo_id = ?', [todo_id]);
+        await db.rawQuery('SELECT * FROM $table WHERE todo_id = ?', [todoId]);
     if (rows.isEmpty) return null;
     final tasklist = rows.map((e) => Task.fromMap(e)).toList();
     this.tasklist = tasklist;
 
     notifyListeners();
     return tasklist;
-  }
-
-  Future<Task> single(int id) async {
-    final db = await instance.database;
-    final rows = await db.rawQuery('SELECT * FROM $table WHERE id = ?', [id]);
-    if (rows.isEmpty) return null;
-
-    return Task.fromMap(rows.first);
   }
 
   Future<void> changeCheck(Task task) async {
@@ -127,9 +121,40 @@ class TaskRepository with ChangeNotifier {
         'SELECT * FROM $table WHERE is_enabled = ? AND is_checked = ?', [1, 0]);
     if (rows.isEmpty) return null;
     final tasklist = rows.map((e) => Task.fromMap(e)).toList();
-    this.enabled_task = tasklist;
+    this.enabledTask = tasklist;
 
     notifyListeners();
     return tasklist;
+  }
+
+  Future<void> refresh() async {
+    this.tasklist.removeRange(0, this.tasklist.length);
+    notifyListeners();
+  }
+
+  Future<void> initEditingTask(Task _task, modalStatus _status) async {
+    if (_status == modalStatus.add) {
+      this.editingTask['is_enabled'] = _task.is_enabled;
+      this.editingTask['is_checked'] = _task.is_checked;
+      this.editingTask['todo_id'] = _task.todo_id;
+    } else {
+      this.editingTask['id'] = _task.id;
+      this.editingTask['description'] = _task.description;
+      this.editingTask['is_enabled'] = _task.is_enabled;
+      this.editingTask['is_checked'] = _task.is_checked;
+      this.editingTask['todo_id'] = _task.todo_id;
+      this.editingTask['timer'] = _task.timer;
+    }
+    notifyListeners();
+  }
+
+  Future<void> editingIsEnable() async {
+    this.editingTask['is_enabled'] = !this.editingTask['is_enabled'];
+    notifyListeners();
+  }
+
+  Future<void> editingDescription(String text) async {
+    this.editingTask["description"] = text;
+    notifyListeners();
   }
 }

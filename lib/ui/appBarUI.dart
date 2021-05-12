@@ -53,7 +53,7 @@ Widget appBarBottom(BuildContext context, Task _task) {
                 ),
                 SizedBox(height: deviceW * 0.008),
                 Text(
-                  selectDateTime.dateTimeParse(_task.timer),
+                  SelectDateTime.dateTimeParse(_task.timer),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: deviceW * 0.038,

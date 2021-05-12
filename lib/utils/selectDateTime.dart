@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
-class selectDateTime {
+class SelectDateTime {
   BuildContext context;
-  selectDateTime(this.context);
+  SelectDateTime(this.context);
 
   Future<DateTime> selectDate() async {
     final DateTime selected = await DatePicker.showDateTimePicker(

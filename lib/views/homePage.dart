@@ -12,14 +12,15 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    notificationPlugin.init();
-    Provider.of<TaskRepository>(context, listen: false).getReminderTask();
-
+    var _taskProvider = Provider.of<TaskRepository>(context, listen: false);
+    var _todoProvider = Provider.of<TodoRepository>(context, listen: false);
     double deviceW = MediaQuery.of(context).size.width;
     double deviceH = MediaQuery.of(context).size.height;
-    var todo_provider = Provider.of<TodoRepository>(context, listen: false);
-    var todo_builder = FutureBuilder(
-      future: todo_provider.getAll(),
+
+    notificationPlugin.init();
+    _taskProvider.getReminderTask();
+    var _todoBuilder = FutureBuilder(
+      future: _todoProvider.getAll(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -30,7 +31,7 @@ class HomePage extends StatelessWidget {
               return Text('Error: ${snapshot.error}');
             else
               return Consumer<TodoRepository>(
-                builder: (cctx, todo, child) => TodoBuilder(todo.todo_items),
+                builder: (cctx, todo, child) => TodoBuilder(todo.todoItems),
               );
         }
       },
@@ -50,7 +51,7 @@ class HomePage extends StatelessWidget {
             SizedBox(height: deviceH * 0.24),
             Container(
               height: deviceH * 0.35,
-              child: todo_builder,
+              child: _todoBuilder,
             ),
           ],
         ),

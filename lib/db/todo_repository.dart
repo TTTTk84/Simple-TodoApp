@@ -7,7 +7,7 @@ class TodoRepository with ChangeNotifier {
   static DBProvider instance = DBProvider.instance;
   List<Todo> todolist = [];
 
-  List<Todo> get todo_items => todolist;
+  List<Todo> get todoItems => todolist;
 
   Future<Todo> create(String text) async {
     DateTime now = DateTime.now();
@@ -37,14 +37,6 @@ class TodoRepository with ChangeNotifier {
 
     notifyListeners();
     return todolist;
-  }
-
-  Future<Todo> single(int id) async {
-    final db = await instance.database;
-    final rows = await db.rawQuery('SELECT * FROM $table WHERE id = ?', [id]);
-    if (rows.isEmpty) return null;
-
-    return Todo.fromMap(rows.first);
   }
 
   Future<void> update(Todo todo) async {

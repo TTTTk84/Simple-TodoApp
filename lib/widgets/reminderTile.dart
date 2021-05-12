@@ -49,7 +49,7 @@ class ReminderCardBuilder extends StatelessWidget {
                   ),
                   SizedBox(height: 3),
                   Text(
-                    selectDateTime.dateTimeParse(tasklist[index].timer),
+                    SelectDateTime.dateTimeParse(tasklist[index].timer),
                     style: TextStyle(
                       color: Colors.black54,
                       fontSize: 13,
