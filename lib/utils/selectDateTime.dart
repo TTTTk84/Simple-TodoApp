@@ -15,8 +15,24 @@ class SelectDateTime {
   }
 
   static String dateTimeParse(DateTime _time) {
-    String _format =
-        '${_time.month}/${_time.day}  ${_time.hour}:${_time.minute}';
+    List<String> _t = [];
+
+    String Function(int v) formatCheck = (v) {
+      if (v ~/ 10 != 0) {
+        return "$v";
+      }
+      return "0$v";
+    };
+
+    _t.addAll(
+      [
+        "${_time.month}",
+        "${formatCheck(_time.day)}",
+        formatCheck(_time.hour),
+        formatCheck(_time.minute)
+      ],
+    );
+    String _format = '${_t[0]}/${_t[1]}  ${_t[2]}:${_t[3]}';
     return _format;
   }
 }

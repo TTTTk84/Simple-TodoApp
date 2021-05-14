@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/utils/statefulWrapper.dart';
 import 'package:todo_app/utils/util.dart';
+import 'package:todo_app/validation/todo_validation.dart';
 import 'package:todo_app/widgets/todoModal.dart';
 
 Widget todoTileUI(Todo _todo, BuildContext context) {
   double deviceW = MediaQuery.of(context).size.width;
   double deviceH = MediaQuery.of(context).size.height;
-  var todo_provider = Provider.of<TodoRepository>(context);
+  var _todoProvider = Provider.of<TodoRepository>(context);
+  var _validProvider = Provider.of<TodoValidation>(context);
   return Container(
     decoration: BoxDecoration(
       boxShadow: [
@@ -77,13 +80,19 @@ Widget todoTileUI(Todo _todo, BuildContext context) {
                           backgroundColor: Colors.transparent,
                           isScrollControlled: true,
                           builder: (context) {
-                            return TodoModal(_todo, modalStatus.edit);
+                            return StatefulWrapper(
+                              onInit: () async {
+                                await _validProvider.initTodo(
+                                    _todo, modalStatus.edit);
+                              },
+                              child: TodoModal(modalStatus.edit),
+                            );
                           },
                         );
                         if (result == null) return;
                         break;
                       case TodoCardSettings.delete:
-                        await todo_provider.delete(_todo);
+                        await _todoProvider.delete(_todo);
                         break;
                     }
                   },

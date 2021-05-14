@@ -5,9 +5,9 @@ import 'package:todo_app/models/todo.dart';
 class TodoRepository with ChangeNotifier {
   static String table = 'todo';
   static DBProvider instance = DBProvider.instance;
-  List<Todo> todolist = [];
+  List<Todo> _todolist = [];
 
-  List<Todo> get todoItems => todolist;
+  List<Todo> get todoItems => _todolist;
 
   Future<Todo> create(String text) async {
     DateTime now = DateTime.now();
@@ -21,7 +21,7 @@ class TodoRepository with ChangeNotifier {
     if (id == 0) return null;
     Todo todo = Todo.fromMap(row);
     todo.id = id;
-    this.todolist.insert(0, todo);
+    _todolist.insert(0, todo);
     notifyListeners();
     return todo;
   }
@@ -31,38 +31,37 @@ class TodoRepository with ChangeNotifier {
     final rows =
         await db.rawQuery('SELECT * FROM $table ORDER BY updated_at DESC');
     if (rows.isEmpty) return null;
-    final todolist = rows.map((e) => Todo.fromMap(e)).toList();
+    final t = rows.map((e) => Todo.fromMap(e)).toList();
 
-    this.todolist = todolist;
+    _todolist = t;
 
     notifyListeners();
-    return todolist;
+    return _todolist;
   }
 
-  Future<void> update(Todo todo) async {
+  Future<void> update(Todo _todo) async {
     String now = DateTime.now().toString();
     final row = {
-      'id': todo.id,
-      'description': todo.description,
+      'id': _todo.id,
+      'description': _todo.description,
       'updated_at': now,
     };
     final db = await instance.database;
-    await db.update(table, row, where: 'id = ?', whereArgs: [todo.id]);
+    await db.update(table, row, where: 'id = ?', whereArgs: [_todo.id]);
 
-    var _todolist = this.todolist;
     _todolist.asMap().forEach((i, v) {
-      if (v.id == todo.id) {
-        this.todolist[i] = todo;
+      if (v.id == _todo.id) {
+        this._todolist[i] = _todo;
       }
     });
     notifyListeners();
   }
 
-  Future<void> delete(Todo todo) async {
+  Future<void> delete(Todo _todo) async {
     final db = await instance.database;
-    await db.delete(table, where: 'id = ?', whereArgs: [todo.id]);
+    await db.delete(table, where: 'id = ?', whereArgs: [_todo.id]);
 
-    this.todolist.remove(todo);
+    _todolist.remove(_todo);
     notifyListeners();
   }
 }

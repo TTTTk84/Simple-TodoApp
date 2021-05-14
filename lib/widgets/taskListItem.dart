@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/db/task_repository.dart';
 import 'package:todo_app/models/task.dart';
+import 'package:todo_app/utils/statefulWrapper.dart';
 import 'package:todo_app/utils/util.dart';
+import 'package:todo_app/validation/task_validation.dart';
 import 'package:todo_app/widgets/taskModal.dart';
 
 Widget listItem(Task _task, BuildContext context) {
+  var _validProvider = Provider.of<TaskValidation>(context, listen: false);
+
   void _checkItem() async {
     await Provider.of<TaskRepository>(context, listen: false)
         .changeCheck(_task);
@@ -53,15 +57,20 @@ Widget listItem(Task _task, BuildContext context) {
                     color: Colors.grey,
                   ),
                   onPressed: () async {
-                    var result = await showModalBottomSheet(
+                    await showModalBottomSheet(
                       context: context,
                       backgroundColor: Colors.transparent,
                       isScrollControlled: true,
                       builder: (context) {
-                        return TaskModal(_task, modalStatus.edit);
+                        return StatefulWrapper(
+                          onInit: () async {
+                            await _validProvider.initTask(
+                                _task, modalStatus.edit);
+                          },
+                          child: TaskModal(modalStatus.edit),
+                        );
                       },
                     );
-                    if (result == null) return;
                   },
                 ),
               ),

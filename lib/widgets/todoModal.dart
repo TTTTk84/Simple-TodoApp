@@ -3,29 +3,31 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/utils/util.dart';
+import 'package:todo_app/validation/todo_validation.dart';
 
 class TodoModal extends StatelessWidget {
-  final Todo _todo;
   final modalStatus status;
 
-  TodoModal(this._todo, this.status);
+  TodoModal(this.status);
 
   @override
   Widget build(BuildContext context) {
     double deviceW = MediaQuery.of(context).size.width;
     double deviceH = MediaQuery.of(context).size.height;
-    var _textController = TextEditingController(text: _todo.description);
-    var _provider = Provider.of<TodoRepository>(context, listen: false);
+    var _validProvider = Provider.of<TodoValidation>(context, listen: false);
+    var _validTodo = _validProvider.todoValidation;
 
     void _onPress() async {
-      if (_textController.text.isEmpty || _textController.text == null) return;
-      _todo.description = _textController.text;
+      var _newTodo = Todo.fromMap(_validTodo);
+
       if (status == modalStatus.add) {
-        await _provider.create(_todo.description);
+        await Provider.of<TodoRepository>(context, listen: false)
+            .create(_newTodo.description);
       } else {
-        await _provider.update(_todo);
+        await Provider.of<TodoRepository>(context, listen: false)
+            .update(_newTodo);
       }
-      Navigator.of(context).pop<String>('${_textController.text}');
+      Navigator.of(context).pop();
     }
 
     return Container(
@@ -73,8 +75,8 @@ class TodoModal extends StatelessWidget {
               ),
             ),
           ),
-          Form(
-            child: SingleChildScrollView(
+          SingleChildScrollView(
+            child: Form(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -90,7 +92,7 @@ class TodoModal extends StatelessWidget {
                   Container(
                     width: deviceW * 0.8,
                     child: TextFormField(
-                      controller: _textController,
+                      initialValue: _validTodo["description"],
                       decoration: InputDecoration(
                         hintText: "筋トレ",
                         border: InputBorder.none,
@@ -100,9 +102,8 @@ class TodoModal extends StatelessWidget {
                         fontSize: 22,
                         fontStyle: FontStyle.normal,
                       ),
-                      validator: (String v) {
-                        if (v.isEmpty || v == null) return 'テキストを入力してください';
-                        return null;
+                      onChanged: (text) {
+                        _validProvider.changeDescription(text);
                       },
                     ),
                   ),
@@ -127,9 +128,7 @@ class TodoModal extends StatelessWidget {
                       ),
                     ),
                     child: ElevatedButton(
-                      onPressed: () {
-                        _onPress();
-                      },
+                      onPressed: (!_validProvider.isValid) ? null : _onPress,
                       child: Text(
                         status == modalStatus.add ? 'カテゴリを追加' : 'カテゴリを編集',
                         style: TextStyle(

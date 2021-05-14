@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/db/task_repository.dart';
-import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/utils/statefulWrapper.dart';
 import 'package:todo_app/utils/util.dart';
+import 'package:todo_app/validation/task_validation.dart';
 import 'package:todo_app/widgets/taskListItem.dart';
 import 'package:todo_app/widgets/taskModal.dart';
 
@@ -18,9 +19,11 @@ class TaskBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     double deviceW = MediaQuery.of(context).size.width;
     double deviceH = MediaQuery.of(context).size.height;
-    var _taskProvider = Provider.of<TaskRepository>(context);
+    var _validProvider = Provider.of<TaskValidation>(context, listen: false);
+    var _taskProvider = Provider.of<TaskRepository>(context, listen: false);
+
     Task newTask = Task(
-      description: "",
+      description: null,
       is_enabled: false,
       is_checked: false,
       todo_id: todo.id,
@@ -57,15 +60,20 @@ class TaskBuilder extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () async {
-                  var result = await showModalBottomSheet(
+                  await showModalBottomSheet(
                     context: context,
                     backgroundColor: Colors.transparent,
                     isScrollControlled: true,
                     builder: (context) {
-                      return TaskModal(newTask, modalStatus.add);
+                      return StatefulWrapper(
+                        onInit: () async {
+                          await _validProvider.initTask(
+                              newTask, modalStatus.add);
+                        },
+                        child: TaskModal(modalStatus.add),
+                      );
                     },
                   );
-                  if (result == null) return;
                 },
                 padding: EdgeInsets.only(right: 10),
                 icon: Icon(
