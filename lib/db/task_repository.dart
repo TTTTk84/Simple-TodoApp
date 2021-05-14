@@ -9,10 +9,10 @@ class TaskRepository with ChangeNotifier {
   static String table = 'task';
   static DBProvider instance = DBProvider.instance;
   List<Task> tasklist = [];
-  List<Task> enabled_task = [];
+  List<Task> enabledTask = [];
 
-  List<Task> get task_items => tasklist;
-  List<Task> get enabled_task_items => enabled_task;
+  List<Task> get taskItems => tasklist;
+  List<Task> get enabledTaskItems => enabledTask;
 
   Future<Task> create(Task task) async {
     DateTime now = DateTime.now();
@@ -32,30 +32,23 @@ class TaskRepository with ChangeNotifier {
       row,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    Task _task = Task.fromMap(row);
+    Task _task = Task.useSql(row);
+    _task.id = id;
     this.tasklist.add(_task);
     notifyListeners();
     return _task;
   }
 
-  Future<List<Task>> getTasks(int todo_id) async {
+  Future<List<Task>> getTasks(int todoId) async {
     final db = await instance.database;
     final rows =
-        await db.rawQuery('SELECT * FROM $table WHERE todo_id = ?', [todo_id]);
+        await db.rawQuery('SELECT * FROM $table WHERE todo_id = ?', [todoId]);
     if (rows.isEmpty) return null;
-    final tasklist = rows.map((e) => Task.fromMap(e)).toList();
+    final tasklist = rows.map((e) => Task.useSql(e)).toList();
     this.tasklist = tasklist;
 
     notifyListeners();
     return tasklist;
-  }
-
-  Future<Task> single(int id) async {
-    final db = await instance.database;
-    final rows = await db.rawQuery('SELECT * FROM $table WHERE id = ?', [id]);
-    if (rows.isEmpty) return null;
-
-    return Task.fromMap(rows.first);
   }
 
   Future<void> changeCheck(Task task) async {
@@ -125,10 +118,15 @@ class TaskRepository with ChangeNotifier {
     final rows = await db.rawQuery(
         'SELECT * FROM $table WHERE is_enabled = ? AND is_checked = ?', [1, 0]);
     if (rows.isEmpty) return null;
-    final tasklist = rows.map((e) => Task.fromMap(e)).toList();
-    this.enabled_task = tasklist;
+    final tasklist = rows.map((e) => Task.useSql(e)).toList();
+    this.enabledTask = tasklist;
 
     notifyListeners();
     return tasklist;
+  }
+
+  Future<void> refresh() async {
+    this.tasklist.removeRange(0, this.tasklist.length);
+    notifyListeners();
   }
 }

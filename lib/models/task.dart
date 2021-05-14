@@ -13,7 +13,7 @@ class Task {
     @required this.updatedAt,
   });
 
-  final int id;
+  int id;
   String description;
   bool is_checked;
   bool is_enabled;
@@ -22,7 +22,7 @@ class Task {
   DateTime createdAt;
   DateTime updatedAt;
 
-  factory Task.fromMap(Map<String, dynamic> json) => Task(
+  factory Task.useSql(Map<String, dynamic> json) => Task(
         id: json['id'],
         description: json['description'],
         is_checked: UtilTool.changeInttoBool(json['is_checked']),
@@ -31,5 +31,16 @@ class Task {
         todo_id: json['todo_id'],
         createdAt: DateTime.tryParse(json['createdAt'].toString()),
         updatedAt: DateTime.tryParse(json['updatedAt'].toString()),
+      );
+
+  factory Task.useModal(Map<String, dynamic> json) => Task(
+        id: json['id'],
+        description: json['description'],
+        is_checked: json['is_checked'],
+        is_enabled: json['is_enabled'],
+        timer: json['timer'],
+        todo_id: json['todo_id'],
+        createdAt: json['createdAt'],
+        updatedAt: json['updatedAt'],
       );
 }

@@ -22,7 +22,7 @@ class ReminderPage extends StatelessWidget {
                 else
                   return Consumer<TaskRepository>(
                     builder: (cctx, task, child) =>
-                        ReminderCardBuilder(task.enabled_task_items),
+                        ReminderCardBuilder(task.enabledTaskItems),
                   );
             }
           },

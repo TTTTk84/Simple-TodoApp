@@ -8,7 +8,7 @@ class Todo {
     @required this.updatedAt,
   });
 
-  final int id;
+  int id;
   String description;
   final DateTime createdAt;
   DateTime updatedAt;

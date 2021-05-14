@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/db/task_repository.dart';
-import 'package:todo_app/db/todo_repository.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/utils/statefulWrapper.dart';
 import 'package:todo_app/utils/util.dart';
+import 'package:todo_app/validation/task_validation.dart';
 import 'package:todo_app/widgets/taskListItem.dart';
 import 'package:todo_app/widgets/taskModal.dart';
 
 class TaskBuilder extends StatelessWidget {
-  Todo todo;
-  List<Task> tasks;
+  final Todo todo;
+  final List<Task> tasks;
 
   TaskBuilder(this.todo, this.tasks);
 
+  @override
   Widget build(BuildContext context) {
-    var task_provider = Provider.of<TaskRepository>(context);
+    double deviceW = MediaQuery.of(context).size.width;
+    double deviceH = MediaQuery.of(context).size.height;
+    var _validProvider = Provider.of<TaskValidation>(context, listen: false);
+    var _taskProvider = Provider.of<TaskRepository>(context, listen: false);
+
+    Task newTask = Task(
+      description: null,
+      is_enabled: false,
+      is_checked: false,
+      todo_id: todo.id,
+      timer: DateTime.now(),
+    );
 
     return Stack(
       children: <Widget>[
@@ -36,6 +49,7 @@ class TaskBuilder extends StatelessWidget {
           appBar: AppBar(
             leading: IconButton(
               onPressed: () {
+                _taskProvider.refresh();
                 Navigator.of(context).pop();
               },
               icon: Icon(
@@ -46,16 +60,20 @@ class TaskBuilder extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () async {
-                  Task new_task = Task(todo_id: todo.id, timer: DateTime.now());
-                  var result = await showModalBottomSheet(
+                  await showModalBottomSheet(
                     context: context,
                     backgroundColor: Colors.transparent,
                     isScrollControlled: true,
                     builder: (context) {
-                      return TaskModal(new_task, modalStatus.add);
+                      return StatefulWrapper(
+                        onInit: () async {
+                          await _validProvider.initTask(
+                              newTask, modalStatus.add);
+                        },
+                        child: TaskModal(modalStatus.add),
+                      );
                     },
                   );
-                  if (result == null) return;
                 },
                 padding: EdgeInsets.only(right: 10),
                 icon: Icon(
@@ -69,21 +87,22 @@ class TaskBuilder extends StatelessWidget {
           ),
           body: Column(
             children: <Widget>[
-              SizedBox(height: 80),
+              SizedBox(height: deviceW * 0.2),
               Container(
                 width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.only(left: 40),
+                padding: EdgeInsets.only(left: deviceW * 0.11),
                 child: Hero(
                   tag: todo.id.toString() + '_description',
                   child: Text(
                     '${todo.description}',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                        fontSize: deviceW * 0.07, fontWeight: FontWeight.w700),
                   ),
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: deviceW * 0.1),
               Container(
-                height: MediaQuery.of(context).size.height / 1.5,
+                height: deviceH * 0.5,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                   itemCount: tasks.length,
